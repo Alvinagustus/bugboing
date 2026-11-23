@@ -8,3 +8,5 @@ Thumbs.db
 .testmuai/
 coverage/
 output-*/
+external-report.json
+checks.external.json

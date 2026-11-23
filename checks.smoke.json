@@ -2,6 +2,6 @@
   {
     "name": "example-heading",
     "url": "https://example.com",
-    "objective": "Verify the page heading says 'Example Domain'"
+    "objective": "Assert the h1 heading text is exactly 'Example Domain'. Fail if the heading is different."
   }
 ]

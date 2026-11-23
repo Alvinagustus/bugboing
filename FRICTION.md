@@ -42,6 +42,7 @@
 | 7 | `bugboing verify --checks checks.smoke.json --max-attempts 1 --kane-cmd ... --report smoke-report.json` | **PASSED** (BugBoing wrapper). Parsed Kane NDJSON `run_end`, produced structured report with status/reason/test_url/session_dir/credits. | smoke-report.json + terminal output |
 | 8 | `kane-cli run "Assert the h1 heading text is exactly 'BugBoing Demo'. Fail..." --url http://127.0.0.1:4173 --headless --agent` (manual, buggy page) | **FAILED** as expected. Kane caught bug: status failed, result_code 740, reason_code `assertion_error.confirmed_product_bug`, verdict confirmed, observed `BugBoing Demoo` expected `BugBoing Demo`. | terminal NDJSON, session `7787949c-...` |
 | 9 | `bugboing verify --checks demo/checks.json --fix-cmd "node demo/fix.mjs" --max-attempts 2 ...` | **PASSED after loop**. Attempt 1: Kane failed (740, confirmed_product_bug, heading mismatch). BugBoing invoked fix-cmd (exit 0, patched demo/index.html). Attempt 2: Kane passed (100, success.complete, heading verified). | `demo/report.json` + terminal output |
+| 10 | `bugboing verify --checks checks.external.json --max-attempts 1 ...` (https://httpbin.org/html) | **PASSED** on real external target outside demo fixture. Kane verified h1 `Herman Melville - Moby-Dick`. | `external-report.json` (gitignored) |
 
 ## Observations
 - Real evidence pack created locally under session evidence dir (run.yaml, steps screenshots/json, network.har, actions.ndjson, run logs). Useful for "Verified".
