@@ -63,24 +63,21 @@ npm install
 
 ### Run the demo (golden path)
 
-Terminal 1 - start demo fixture server:
+```bash
+npm run demo
+```
+
+This resets the demo fixture, starts a local server, runs BugBoing with a generic payload-driven fixer (`demo/fix-generic.mjs`), and writes `demo/report.json`.
+
+Expected: attempt 1 fails because Kane catches `BugBoing Demoo` != `BugBoing Demo`, the fixer consumes the failure JSON from stdin and patches `demo/index.html`, attempt 2 passes only after Kane `run_end` reports `passed`.
+
+Manual run:
 
 ```bash
 node demo/serve.mjs
+# in another terminal
+npx tsx src/cli.ts verify --checks demo/checks.json --fix-cmd "node demo/fix-generic.mjs" --max-attempts 2 --kane-cmd kane-cli.cmd --report demo/report.json
 ```
-
-Terminal 2 - run BugBoing:
-
-```bash
-npx tsx src/cli.ts verify \
-  --checks demo/checks.json \
-  --fix-cmd "node demo/fix.mjs" \
-  --max-attempts 2 \
-  --kane-cmd kane-cli.cmd \
-  --report demo/report.json
-```
-
-Expected: attempt 1 fails because Kane catches `BugBoing Demoo` != `BugBoing Demo`, fix-cmd patches `demo/index.html`, attempt 2 passes with Kane verification.
 
 ## Checks Format
 
@@ -119,7 +116,21 @@ Expected: attempt 1 fails because Kane catches `BugBoing Demoo` != `BugBoing Dem
 }
 ```
 
-The fix command can be anything: a deterministic script, `opencode run ...`, Claude/Codex/Gemini CLI, or your own agent wrapper. It should exit 0 when it applied a fix attempt.
+The fix command can be anything that reads stdin JSON and attempts a fix. BugBoing does not trust the fixer's exit code as proof; it reruns Kane.
+
+Examples:
+
+```bash
+# Generic payload-driven fixer (included)
+--fix-cmd "node demo/fix-generic.mjs"
+
+# Deterministic demo fixer (included)
+--fix-cmd "node demo/fix.mjs"
+
+# Agent CLI examples (templates - adapt to your agent)
+--fix-cmd "opencode run 'Fix the bug using the BugBoing JSON on stdin'"
+--fix-cmd "claude -p 'Read BugBoing failure JSON from stdin and fix the issue'"
+```
 
 ## CLI
 
@@ -134,16 +145,23 @@ Exit codes:
 
 ## Evidence
 
-- `demo/report.json` - golden-path report (fail -> fix -> pass) with strict `kaneVerified`/`verificationSource` fields.
+- `demo/report.json` - golden-path report (fail -> fix -> pass) with strict `kaneVerified`/`verificationSource` fields, refreshed from a real Kane run.
 - `tests/contract.test.ts` - enforces strict contract: only Kane `run_end` pass is green; exit 0 without `run_end` is unverified.
+
+## Tests
+
+```bash
+npm test
+```
 
 ## Known Limitations
 
-- Demo fix-cmd is deterministic (patches known typo) for reliability; real AI-agent fix is pluggable but not auto-bundled.
+- The fail→fix→rerun verification loop is a crowded pattern. BugBoing's differentiator is the strict contract (no Kane `run_end` pass = no green) and an agent-agnostic `--fix-cmd` payload interface, not novelty of the loop itself.
+- Included fixers are demo-scoped (deterministic/payload-driven) for reliability; real agent CLIs can be plugged in via `--fix-cmd`, but are not bundled.
 - Kane objective phrasing matters; vague objectives may pass without strong assertion.
 - Depends on Kane CLI/TestMu AI availability and credits.
 - Windows PowerShell script policy may require `.cmd` wrappers.
-- No parallel checks, no MCP server, no HTML dashboard yet (cut for scope).
+- No parallel checks, MCP server, or HTML dashboard (cut for scope).
 
 ## Next Steps
 
@@ -155,4 +173,4 @@ Exit codes:
 
 ## License
 
-TBD (add before submission per hackathon rules).
+MIT. See [`LICENSE`](./LICENSE).

@@ -12,6 +12,7 @@
     "dev": "tsx src/cli.ts",
     "demo": "node demo/run-demo.mjs",
     "demo:help": "tsx src/cli.ts --help",
+    "test": "node --test --import tsx tests/smoke.test.ts tests/contract.test.ts",
     "smoke": "node --test --import tsx tests/smoke.test.ts"
   },
   "license": "MIT",
