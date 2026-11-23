@@ -1,0 +1,26 @@
+{
+  "name": "bugboing",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Fail -> Kane evidence -> agent fix -> rerun loop for web verification.",
+  "bin": {
+    "bugboing": "dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsx src/cli.ts",
+    "demo": "node demo/run-demo.mjs",
+    "demo:help": "tsx src/cli.ts --help",
+    "smoke": "node --test --import tsx tests/smoke.test.ts"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "^4.20.0",
+    "typescript": "^5.8.0"
+  }
+}

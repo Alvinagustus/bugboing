@@ -1,0 +1,7 @@
+[
+  {
+    "name": "heading-check",
+    "url": "http://127.0.0.1:4173",
+    "objective": "Assert the h1 heading text is exactly 'BugBoing Demo'. Fail if the heading is different."
+  }
+]

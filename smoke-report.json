@@ -1,0 +1,68 @@
+{
+  "tool": "bugboing",
+  "version": "0.1.0",
+  "startedAt": "2026-11-23T12:18:48.809Z",
+  "finishedAt": "2026-11-23T12:19:37.656Z",
+  "passed": true,
+  "checks": [
+    {
+      "name": "example-heading",
+      "objective": "Verify the page heading says 'Example Domain'",
+      "url": "https://example.com",
+      "attempt": 1,
+      "passed": true,
+      "status": "passed",
+      "reason": "Objective completed",
+      "resultCode": 100,
+      "reasonCode": "success.complete",
+      "testUrl": "https://test-manager.lambdatest.com/projects/01M843ABM4C5EK249BW1SSWQDA/test-cases/01M845GSTGPEB9J58XFG0Y27QR/dashboard/share/US_KY0G0ITH8GK4Y6F8ZEJBWWJTEIPQ1Z2VPKZS8F1S2K5LEUS5YH9IGBGX4TUWMRM6?type=summary&agentView=true&fqdn=summary-page",
+      "sessionDir": "C:\\Users\\Alvin Agustus/.testmuai/kaneai/sessions\\f2338ad4-d98b-4147-bf36-a28ed657b6c7",
+      "summary": "The browser automation run completed and ended on the Example Domain homepage.\nNo specific task details or additional page information were available for this run.",
+      "oneLiner": "opened the Example Domain homepage on example.com",
+      "creditsConsumed": 9.6876,
+      "rawRunEnd": {
+        "type": "run_end",
+        "status": "passed",
+        "summary": "The browser automation run completed and ended on the Example Domain homepage.\nNo specific task details or additional page information were available for this run.",
+        "one_liner": "opened the Example Domain homepage on example.com",
+        "final_state": {
+          "url": "https://example.com/"
+        },
+        "reason": "Objective completed",
+        "duration": 17.8,
+        "bifurcated": false,
+        "total_runs": 1,
+        "context": {
+          "memory": {},
+          "variables": {},
+          "pointer": "(passed) opened the Example Domain homepage on example.com"
+        },
+        "credits_consumed": 9.6876,
+        "session_dir": "C:\\Users\\Alvin Agustus/.testmuai/kaneai/sessions\\f2338ad4-d98b-4147-bf36-a28ed657b6c7",
+        "run_dir": "C:\\Users\\Alvin Agustus/.testmuai/kaneai/sessions\\f2338ad4-d98b-4147-bf36-a28ed657b6c7\\runs\\0",
+        "result_code": 100,
+        "reason_code": "success.complete",
+        "per_flow_metadata": [
+          {
+            "result_code": "100",
+            "reason_code": "success.complete",
+            "error_message": null,
+            "summary": "The browser automation run completed and ended on the Example Domain homepage.\nNo specific task details or additional page information were available for this run.",
+            "one_liner": "opened the Example Domain homepage on example.com",
+            "credits_consumed": 9.6876
+          }
+        ],
+        "run_id": "run-0",
+        "test_url": "https://test-manager.lambdatest.com/projects/01M843ABM4C5EK249BW1SSWQDA/test-cases/01M845GSTGPEB9J58XFG0Y27QR/dashboard/share/US_KY0G0ITH8GK4Y6F8ZEJBWWJTEIPQ1Z2VPKZS8F1S2K5LEUS5YH9IGBGX4TUWMRM6?type=summary&agentView=true&fqdn=summary-page",
+        "coverage": {
+          "status": "skipped"
+        },
+        "v": 1,
+        "ts": "2026-11-23T12:19:34.869Z"
+      },
+      "stdoutTail": "{\"type\":\"stream_start\",\"cli_version\":\"0.10.8\",\"surface\":\"run\",\"pid\":4956,\"v\":1,\"ts\":\"2026-11-23T12:18:49.358Z\"}\n{\"type\":\"recording_state\",\"enabled\":true,\"session_id\":\"f2338ad4-d98b-4147-bf36-a28ed657b6c7\",\"persist\":false,\"v\":1,\"ts\":\"2026-11-23T12:18:49.380Z\"}\n{\"type\":\"skill_update_available\",\"current\":null,\"latest\":\"0.1.4\",\"install_cmd\":\"kane-cli install skill\",\"v\":1,\"ts\":\"2026-11-23T12:18:53.575Z\"}\n{\"type\":\"bifurcation\",\"flows\":[\"Navigate to https://example.com then Verify\"],\"count\":1,\"v\":1,\"ts\":\"2026-11-23T12:19:00.002Z\"}\n{\"step\":2,\"status\":\"running\",\"remark\":\"Step 1\",\"v\":1,\"ts\":\"2026-11-23T12:19:05.035Z\"}\n{\"step\":2,\"status\":\"done\",\"remark\":\"navigate: Navigate to https://example.com\",\"v\":1,\"ts\":\"2026-11-23T12:19:05.339Z\"}\n{\"step\":3,\"status\":\"running\",\"remark\":\"Step 2\",\"v\":1,\"ts\":\"2026-11-23T12:19:05.688Z\"}\n{\"step\":3,\"status\":\"done\",\"remark\":\"wait: Waiting verify the current page is available\",\"v\":1,\"ts\":\"2026-11-23T12:19:11.402Z\"}\n{\"type\":\"coverage\",\"status\":\"skipped\",\"reason\":\"not_assurance_project\",\"pack\":\"C:\\\\Users\\\\Alvin Agustus\\\\.testmuai\\\\kaneai\\\\sessions\\\\f2338ad4-d98b-4147-bf36-a28ed657b6c7\\\\evidence\\\\1bc7ba38-87cf-46b0-9af1-e2c06d5f0aab.evidence\",\"v\":1,\"ts\":\"2026-11-23T12:19:34.868Z\"}\n{\"type\":\"run_end\",\"status\":\"passed\",\"summary\":\"The browser automation run completed and ended on the Example Domain homepage.\\nNo specific task details or additional page information were available for this run.\",\"one_liner\":\"opened the Example Domain homepage on example.com\",\"final_state\":{\"url\":\"https://example.com/\"},\"reason\":\"Objective completed\",\"duration\":17.8,\"bifurcated\":false,\"total_runs\":1,\"context\":{\"memory\":{},\"variables\":{},\"pointer\":\"(passed) opened the Example Domain homepage on example.com\"},\"credits_consumed\":9.6876,\"session_dir\":\"C:\\\\Users\\\\Alvin Agustus/.testmuai/kaneai/sessions\\\\f2338ad4-d98b-4147-bf36-a28ed657b6c7\",\"run_dir\":\"C:\\\\Users\\\\Alvin Agustus/.testmuai/kaneai/sessions\\\\f2338ad4-d98b-4147-bf36-a28ed657b6c7\\\\runs\\\\0\",\"result_code\":100,\"reason_code\":\"success.complete\",\"per_flow_metadata\":[{\"result_code\":\"100\",\"reason_code\":\"success.complete\",\"error_message\":null,\"summary\":\"The browser automation run completed and ended on the Example Domain homepage.\\nNo specific task details or additional page information were available for this run.\",\"one_liner\":\"opened the Example Domain homepage on example.com\",\"credits_consumed\":9.6876}],\"run_id\":\"run-0\",\"test_url\":\"https://test-manager.lambdatest.com/projects/01M843ABM4C5EK249BW1SSWQDA/test-cases/01M845GSTGPEB9J58XFG0Y27QR/dashboard/share/US_KY0G0ITH8GK4Y6F8ZEJBWWJTEIPQ1Z2VPKZS8F1S2K5LEUS5YH9IGBGX4TUWMRM6?type=summary&agentView=true&fqdn=summary-page\",\"coverage\":{\"status\":\"skipped\"},\"v\":1,\"ts\":\"2026-11-23T12:19:34.869Z\"}\n",
+      "stderrTail": "Skill update available: not installed → 0.1.4 — run `kane-cli install skill`\n\nRunning on: Desktop · Chrome\nevidence: view locally with `kane-cli evidence serve C:\\Users\\Alvin Agustus\\.testmuai\\kaneai\\sessions\\f2338ad4-d98b-4147-bf36-a28ed657b6c7\\evidence\\1bc7ba38-87cf-46b0-9af1-e2c06d5f0aab.evidence`\n",
+      "exitCode": 0
+    }
+  ]
+}

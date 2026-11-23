@@ -1,0 +1,98 @@
+{
+  "tool": "bugboing",
+  "version": "0.1.0",
+  "startedAt": "2026-11-23T12:27:43.126Z",
+  "finishedAt": "2026-11-23T12:29:04.378Z",
+  "passed": true,
+  "checks": [
+    {
+      "name": "heading-check",
+      "objective": "Assert the h1 heading text is exactly 'BugBoing Demo'. Fail if the heading is different.",
+      "url": "http://127.0.0.1:4173",
+      "attempt": 2,
+      "passed": true,
+      "status": "passed",
+      "reason": "Objective completed",
+      "resultCode": 100,
+      "reasonCode": "success.complete",
+      "testUrl": "https://test-manager.lambdatest.com/projects/01M843ABM4C5EK249BW1SSWQDA/test-cases/01M8462A0JS1P2M6GXHE4QC6W0/dashboard/share/US_QUOM7MI0D2UIAV4LALIUO6C5ZDACR57QEYBVDG7MKMP3HP2N58SAX91WE86TWSRD?type=summary&agentView=true&fqdn=summary-page",
+      "sessionDir": "C:\\Users\\Alvin Agustus/.testmuai/kaneai/sessions\\3f135364-ac7d-40c3-aff9-9fddba345fd6",
+      "summary": "The requested page heading was checked on the BugBoing Demo site.\nThe main heading was confirmed to read exactly “BugBoing Demo”.",
+      "oneLiner": "verified the main heading on the BugBoing Demo site",
+      "creditsConsumed": 2.2890375,
+      "rawRunEnd": {
+        "type": "run_end",
+        "status": "passed",
+        "summary": "The requested page heading was checked on the BugBoing Demo site.\nThe main heading was confirmed to read exactly “BugBoing Demo”.",
+        "one_liner": "verified the main heading on the BugBoing Demo site",
+        "final_state": {
+          "url": "http://127.0.0.1:4173/",
+          "h1_heading_text": "BugBoing Demo"
+        },
+        "reason": "Objective completed",
+        "duration": 18.2,
+        "bifurcated": false,
+        "total_runs": 1,
+        "context": {
+          "memory": {
+            "h1_heading_text_check": {
+              "extracted_value": "BugBoing Demo",
+              "operator": "equals",
+              "transforms": [
+                "strip"
+              ],
+              "json_path": null,
+              "reasoning": "value: 'BugBoing Demo' -> 'BugBoing Demo' after ['strip']; equals 'BugBoing Demo' -> PASS",
+              "analyzer_type": "textual_visual",
+              "step": 2,
+              "query": "the text of the level-one heading in the main page content",
+              "condition": "the h1 heading text is exactly 'BugBoing Demo'",
+              "human_description": "Reading the main page heading",
+              "expected_value": "BugBoing Demo",
+              "code_js": "el(2).innerText.trim()",
+              "wrapped_js": "(els) => {\n  const __m = {2: 0};\n  const el = (i) => els[__m[i]];\n  const __v = (el(2).innerText.trim());\n  return (typeof __v === 'boolean' ? String(__v) : __v);\n}",
+              "locators": [
+                "internal:role=heading[name=\"BugBoing Demo\"i]"
+              ],
+              "needs_unit_conversion": false
+            }
+          },
+          "variables": {
+            "h1_heading_text_check": {
+              "syntax": "{{h1_heading_text_check}}",
+              "value": "BugBoing Demo",
+              "type": "memory",
+              "secret": false
+            }
+          },
+          "pointer": "(passed) verified the main heading on the BugBoing Demo site"
+        },
+        "credits_consumed": 2.2890375,
+        "session_dir": "C:\\Users\\Alvin Agustus/.testmuai/kaneai/sessions\\3f135364-ac7d-40c3-aff9-9fddba345fd6",
+        "run_dir": "C:\\Users\\Alvin Agustus/.testmuai/kaneai/sessions\\3f135364-ac7d-40c3-aff9-9fddba345fd6\\runs\\0",
+        "result_code": 100,
+        "reason_code": "success.complete",
+        "per_flow_metadata": [
+          {
+            "result_code": "100",
+            "reason_code": "success.complete",
+            "error_message": null,
+            "summary": "The requested page heading was checked on the BugBoing Demo site.\nThe main heading was confirmed to read exactly “BugBoing Demo”.",
+            "one_liner": "verified the main heading on the BugBoing Demo site",
+            "credits_consumed": 2.2890375
+          }
+        ],
+        "run_id": "run-0",
+        "test_url": "https://test-manager.lambdatest.com/projects/01M843ABM4C5EK249BW1SSWQDA/test-cases/01M8462A0JS1P2M6GXHE4QC6W0/dashboard/share/US_QUOM7MI0D2UIAV4LALIUO6C5ZDACR57QEYBVDG7MKMP3HP2N58SAX91WE86TWSRD?type=summary&agentView=true&fqdn=summary-page",
+        "coverage": {
+          "status": "skipped"
+        },
+        "v": 1,
+        "ts": "2026-11-23T12:29:02.146Z"
+      },
+      "stdoutTail": "{\"type\":\"stream_start\",\"cli_version\":\"0.10.8\",\"surface\":\"run\",\"pid\":23536,\"v\":1,\"ts\":\"2026-11-23T12:28:25.094Z\"}\n{\"type\":\"recording_state\",\"enabled\":true,\"session_id\":\"3f135364-ac7d-40c3-aff9-9fddba345fd6\",\"persist\":false,\"v\":1,\"ts\":\"2026-11-23T12:28:25.116Z\"}\n{\"type\":\"skill_update_available\",\"current\":null,\"latest\":\"0.1.4\",\"install_cmd\":\"kane-cli install skill\",\"v\":1,\"ts\":\"2026-11-23T12:28:26.950Z\"}\n{\"type\":\"bifurcation\",\"flows\":[\"Navigate to http://127.0.0.1:4173 then Assert the h1 heading text is exactly 'BugBoing Demo'.\\nFail if the heading is different.\"],\"count\":1,\"v\":1,\"ts\":\"2026-11-23T12:28:32.951Z\"}\n{\"step\":2,\"status\":\"running\",\"remark\":\"Step 1\",\"v\":1,\"ts\":\"2026-11-23T12:28:33.877Z\"}\n{\"step\":2,\"status\":\"done\",\"remark\":\"navigate: Navigate to http://127.0.0.1:4173\",\"v\":1,\"ts\":\"2026-11-23T12:28:33.886Z\"}\n{\"step\":3,\"status\":\"running\",\"remark\":\"Step 2\",\"v\":1,\"ts\":\"2026-11-23T12:28:38.014Z\"}\n{\"step\":3,\"status\":\"done\",\"remark\":\"analyze: the h1 heading text is exactly 'BugBoing Demo'\",\"v\":1,\"ts\":\"2026-11-23T12:28:46.089Z\"}\n{\"step\":4,\"status\":\"running\",\"remark\":\"Step 3\",\"v\":1,\"ts\":\"2026-11-23T12:28:46.676Z\"}\n{\"step\":4,\"status\":\"done\",\"remark\":\"assert: the h1 heading text is exactly 'BugBoing Demo'\",\"v\":1,\"ts\":\"2026-11-23T12:28:46.688Z\"}\n{\"type\":\"coverage\",\"status\":\"skipped\",\"reason\":\"not_assurance_project\",\"pack\":\"C:\\\\Users\\\\Alvin Agustus\\\\.testmuai\\\\kaneai\\\\sessions\\\\3f135364-ac7d-40c3-aff9-9fddba345fd6\\\\evidence\\\\0efc731d-37ea-442e-8264-4d063c7cf11c.evidence\",\"v\":1,\"ts\":\"2026-11-23T12:29:02.146Z\"}\n{\"type\":\"run_end\",\"status\":\"passed\",\"summary\":\"The requested page heading was checked on the BugBoing Demo site.\\nThe main heading was confirmed to read exactly “BugBoing Demo”.\",\"one_liner\":\"verified the main heading on the BugBoing Demo site\",\"final_state\":{\"url\":\"http://127.0.0.1:4173/\",\"h1_heading_text\":\"BugBoing Demo\"},\"reason\":\"Objective completed\",\"duration\":18.2,\"bifurcated\":false,\"total_runs\":1,\"context\":{\"memory\":{\"h1_heading_text_check\":{\"extracted_value\":\"BugBoing Demo\",\"operator\":\"equals\",\"transforms\":[\"strip\"],\"json_path\":null,\"reasoning\":\"value: 'BugBoing Demo' -> 'BugBoing Demo' after ['strip']; equals 'BugBoing Demo' -> PASS\",\"analyzer_type\":\"textual_visual\",\"step\":2,\"query\":\"the text of the level-one heading in the main page content\",\"condition\":\"the h1 heading text is exactly 'BugBoing Demo'\",\"human_description\":\"Reading the main page heading\",\"expected_value\":\"BugBoing Demo\",\"code_js\":\"el(2).innerText.trim()\",\"wrapped_js\":\"(els) => {\\n  const __m = {2: 0};\\n  const el = (i) => els[__m[i]];\\n  const __v = (el(2).innerText.trim());\\n  return (typeof __v === 'boolean' ? String(__v) : __v);\\n}\",\"locators\":[\"internal:role=heading[name=\\\"BugBoing Demo\\\"i]\"],\"needs_unit_conversion\":false}},\"variables\":{\"h1_heading_text_check\":{\"syntax\":\"{{h1_heading_text_check}}\",\"value\":\"BugBoing Demo\",\"type\":\"memory\",\"secret\":false}},\"pointer\":\"(passed) verified the main heading on the BugBoing Demo site\"},\"credits_consumed\":2.2890375,\"session_dir\":\"C:\\\\Users\\\\Alvin Agustus/.testmuai/kaneai/sessions\\\\3f135364-ac7d-40c3-aff9-9fddba345fd6\",\"run_dir\":\"C:\\\\Users\\\\Alvin Agustus/.testmuai/kaneai/sessions\\\\3f135364-ac7d-40c3-aff9-9fddba345fd6\\\\runs\\\\0\",\"result_code\":100,\"reason_code\":\"success.complete\",\"per_flow_metadata\":[{\"result_code\":\"100\",\"reason_code\":\"success.complete\",\"error_message\":null,\"summary\":\"The requested page heading was checked on the BugBoing Demo site.\\nThe main heading was confirmed to read exactly “BugBoing Demo”.\",\"one_liner\":\"verified the main heading on the BugBoing Demo site\",\"credits_consumed\":2.2890375}],\"run_id\":\"run-0\",\"test_url\":\"https://test-manager.lambdatest.com/projects/01M843ABM4C5EK249BW1SSWQDA/test-cases/01M8462A0JS1P2M6GXHE4QC6W0/dashboard/share/US_QUOM7MI0D2UIAV4LALIUO6C5ZDACR57QEYBVDG7MKMP3HP2N58SAX91WE86TWSRD?type=summary&agentView=true&fqdn=summary-page\",\"coverage\":{\"status\":\"skipped\"},\"v\":1,\"ts\":\"2026-11-23T12:29:02.146Z\"}\n",
+      "stderrTail": "Skill update available: not installed → 0.1.4 — run `kane-cli install skill`\n\nRunning on: Desktop · Chrome\nevidence: view locally with `kane-cli evidence serve C:\\Users\\Alvin Agustus\\.testmuai\\kaneai\\sessions\\3f135364-ac7d-40c3-aff9-9fddba345fd6\\evidence\\0efc731d-37ea-442e-8264-4d063c7cf11c.evidence`\n",
+      "exitCode": 0
+    }
+  ]
+}
