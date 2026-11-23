@@ -134,9 +134,7 @@ Exit codes:
 
 ## Evidence
 
-- `CLAIMS.md` - evidence ledger.
-- `FRICTION.md` - real Kane CLI runs, friction, observations.
-- `demo/report.json` - golden-path report (fail -> fix -> pass).
+- `demo/report.json` - golden-path report (fail -> fix -> pass) with strict `kaneVerified`/`verificationSource` fields.
 - `tests/contract.test.ts` - enforces strict contract: only Kane `run_end` pass is green; exit 0 without `run_end` is unverified.
 
 ## Known Limitations
