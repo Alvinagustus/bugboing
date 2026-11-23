@@ -37,7 +37,7 @@ await delay(1000);
 const args = [
   "--import", "tsx", "src/cli.ts", "verify",
   "--checks", "demo/checks.json",
-  "--fix-cmd", "node demo/fix.mjs",
+  "--fix-cmd", "node demo/fix-generic.mjs",
   "--max-attempts", "2",
   "--kane-cmd", process.env.KANE_CMD || (process.platform === "win32" ? "kane-cli.cmd" : "kane-cli"),
   "--report", "demo/report.json",

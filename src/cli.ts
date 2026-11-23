@@ -34,6 +34,8 @@ type CheckResult = {
   url: string;
   attempt: number;
   passed: boolean;
+  kaneVerified: boolean;
+  verificationSource: "kane_run_end" | "none";
   status: string;
   reason: string;
   resultCode?: number | string;
@@ -51,6 +53,7 @@ type CheckResult = {
   fixExitCode?: number | null;
   fixStdoutTail?: string;
   fixStderrTail?: string;
+  attemptHistory?: CheckResult[];
 };
 
 type Report = {
@@ -159,9 +162,19 @@ function extractRunEnd(stdout: string): RunEnd | undefined {
   return found;
 }
 
-function isPass(runEnd: RunEnd | undefined, exitCode: number | null): boolean {
-  if (runEnd?.status) return String(runEnd.status).toLowerCase() === "passed";
-  return exitCode === 0;
+function evaluateRunEnd(runEnd: RunEnd | undefined): { passed: boolean; kaneVerified: boolean; verificationSource: "kane_run_end" | "none"; status: string; reason: string } {
+  if (!runEnd) {
+    return { passed: false, kaneVerified: false, verificationSource: "none", status: "unverified", reason: "missing_kane_run_end" };
+  }
+  const status = String(runEnd.status ?? "unknown").toLowerCase();
+  const passed = status === "passed";
+  return {
+    passed,
+    kaneVerified: passed,
+    verificationSource: "kane_run_end",
+    status,
+    reason: String(runEnd.reason ?? runEnd.reason_code ?? (passed ? "ok" : "unknown")),
+  };
 }
 
 async function loadChecks(file: string): Promise<Check[]> {
@@ -184,15 +197,13 @@ async function runKaneCheck(kaneCmd: string, check: Check): Promise<CheckResult>
   if (check.timeoutSeconds) args.push("--timeout", String(check.timeoutSeconds));
   const { code, stdout, stderr } = await runCmd(kaneCmd, args, { timeoutMs: ((check.timeoutSeconds ?? 180) + 60) * 1000 });
   const runEnd = extractRunEnd(stdout);
-  const passed = isPass(runEnd, code);
+  const verdict = evaluateRunEnd(runEnd);
   return {
     name: check.name,
     objective: check.objective,
     url: check.url,
     attempt: 1,
-    passed,
-    status: String(runEnd?.status ?? (passed ? "passed" : "failed")),
-    reason: String(runEnd?.reason ?? runEnd?.reason_code ?? (passed ? "ok" : "unknown")),
+    ...verdict,
     resultCode: runEnd?.result_code,
     reasonCode: runEnd?.reason_code,
     testUrl: runEnd?.test_url,
@@ -234,13 +245,17 @@ async function main() {
 
   for (const check of checks) {
     let last: CheckResult | undefined;
+    const history: CheckResult[] = [];
     for (let attempt = 1; attempt <= maxAttempts; attempt++) {
       console.log(`\n[bugboing] check=${check.name} attempt=${attempt}/${maxAttempts}`);
       const r = await runKaneCheck(kaneCmd, check);
       r.attempt = attempt;
       last = r;
       console.log(`[bugboing] status=${r.status} reason=${r.reason} test_url=${r.testUrl ?? ""}`);
-      if (r.passed) break;
+      if (r.passed) {
+        history.push(r);
+        break;
+      }
       if (attempt < maxAttempts && fixCmd) {
         console.log(`[bugboing] invoking fix-cmd for ${check.name}`);
         const payload = { tool: "bugboing", check, attempt, maxAttempts, result: r };
@@ -250,16 +265,22 @@ async function main() {
         r.fixStdoutTail = tail(fix.stdout);
         r.fixStderrTail = tail(fix.stderr);
         console.log(`[bugboing] fix-cmd exit=${fix.code}`);
+        history.push(r);
         if (fix.code !== 0) {
           console.log(`[bugboing] fix-cmd failed; stopping retries for this check`);
           break;
         }
-      } else if (attempt < maxAttempts && !fixCmd) {
-        console.log(`[bugboing] no --fix-cmd provided; not retrying`);
+      } else {
+        history.push(r);
+        if (attempt < maxAttempts && !fixCmd) console.log(`[bugboing] no --fix-cmd provided; not retrying`);
         break;
       }
     }
-    if (last) results.push(last);
+    if (last) {
+      const prev = history.filter((a) => a !== last);
+      if (prev.length > 0) last.attemptHistory = prev;
+      results.push(last);
+    }
   }
 
   const passed = results.every((r) => r.passed);

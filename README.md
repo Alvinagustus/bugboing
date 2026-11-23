@@ -1,7 +1,7 @@
 # BugBoing
 
 **Fail. Boing. Fix. Verify.**  
-BugBoing is a tiny CLI that turns Kane CLI browser checks into an automatic agent loop: when Kane catches a failure, BugBoing sends structured evidence to your fix command, reruns the same Kane check, and only goes green when Kane proves it.
+BugBoing is a small, agent-agnostic verification loop around Kane CLI. When Kane catches a browser failure, BugBoing sends structured evidence to any `--fix-cmd`, reruns the same Kane check, and turns green **only** when Kane emits a passing `run_end`.
 
 > Hackathon: KaneCLI Online Hackathon (TestMu AI). Built for web verification with Kane CLI as the load-bearing verification engine.
 
@@ -14,7 +14,7 @@ AI coding agents can edit code fast, but they often miss the last mile: *did the
 1. **Run** - BugBoing executes checks via `kane-cli run ... --headless --agent`.
 2. **Catch** - It parses Kane NDJSON `run_end` for pass/fail, reason, verdict, evidence, and Test Manager link.
 3. **Boing** - On failure, it invokes `--fix-cmd` and passes a structured failure payload on stdin (JSON).
-4. **Verify** - It reruns the same Kane check until pass or `--max-attempts`.
+4. **Verify** - It reruns the same Kane check until Kane `run_end` passes or `--max-attempts` is reached. No Kane pass, no green.
 
 ```text
 checks.json ──> BugBoing ──> kane-cli run (--headless --agent)
@@ -31,13 +31,20 @@ checks.json ──> BugBoing ──> kane-cli run (--headless --agent)
 
 ## Why Kane CLI Is Load-Bearing
 
-BugBoing does **not** replace browser verification. Kane CLI is the verifier:
+BugBoing does **not** replace browser verification. Kane CLI is the only pass/fail oracle:
 - Runs real browser objectives in natural language.
 - Produces structured machine-readable NDJSON (`run_end`, result/reason codes, summary, context).
 - Produces evidence packs and Test Manager share links.
 - Catches real failures (e.g. assertion/confirmed product bug) that become the fix payload.
 
 Without Kane CLI, BugBoing has no trusted pass/fail signal.
+
+## Verification Contract (strict)
+
+- **No Kane pass, no green.** BugBoing only reports success when it parses a Kane `run_end` with `status: "passed"`.
+- **Fixer exit code is not proof.** A `--fix-cmd` can exit 0, but BugBoing still reruns Kane and requires a passing Kane verdict.
+- **Missing/unparseable `run_end` is unverified.** If Kane exits 0/1 without a `run_end`, BugBoing reports `unverified` / `missing_kane_run_end`, not success.
+- **Agent-agnostic fixer.** Any command can be plugged into `--fix-cmd`; it receives the failure payload JSON on stdin.
 
 ## Quick Start
 
@@ -101,7 +108,14 @@ Expected: attempt 1 fails because Kane catches `BugBoing Demoo` != `BugBoing Dem
   "check": { "name": "...", "url": "...", "objective": "..." },
   "attempt": 1,
   "maxAttempts": 2,
-  "result": { "status": "failed", "reason": "...", "summary": "...", "testUrl": "...", "rawRunEnd": { "...": "..." } }
+  "result": {
+    "status": "failed",
+    "reason": "...",
+    "kaneVerified": false,
+    "verificationSource": "kane_run_end",
+    "testUrl": "...",
+    "rawRunEnd": { "...": "..." }
+  }
 }
 ```
 
@@ -123,6 +137,7 @@ Exit codes:
 - `CLAIMS.md` - evidence ledger.
 - `FRICTION.md` - real Kane CLI runs, friction, observations.
 - `demo/report.json` - golden-path report (fail -> fix -> pass).
+- `tests/contract.test.ts` - enforces strict contract: only Kane `run_end` pass is green; exit 0 without `run_end` is unverified.
 
 ## Known Limitations
 
