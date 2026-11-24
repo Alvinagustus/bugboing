@@ -1,7 +1,7 @@
 #!/usr/bin/env node
-import { spawn } from "node:child_process";
 import { readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
+import { runCmd, splitCommandLine } from "./proc.js";
 
 type Check = {
   name: string;
@@ -87,6 +87,7 @@ Options:
   --max-attempts <n>    Attempts per check including first run (default: 2)
   --report <file>       Write JSON report to file
   --kane-cmd <cmd>      Kane CLI command (default: kane-cli.cmd on Windows, kane-cli otherwise)
+  --kane-timeout <s>    Hard kill deadline for the Kane command (default: check timeout + 60s)
   --help                Show help
 `;
 }
@@ -110,53 +111,6 @@ function parseArgs(argv: string[]): Record<string, string | boolean> {
 function tail(s: string, max = 4000): string {
   if (s.length <= max) return s;
   return s.slice(s.length - max);
-}
-
-function quoteWin(s: string): string {
-  if (!/[\s"&()^<>|]/.test(s)) return s;
-  return '"' + s.replace(/"/g, '\\"') + '"';
-}
-
-function quotePosix(s: string): string {
-  if (/^[A-Za-z0-9_./:@%+=,-]+$/.test(s)) return s;
-  return "'" + s.replace(/'/g, "'\\''") + "'";
-}
-
-function quoteArg(s: string): string {
-  return process.platform === "win32" ? quoteWin(s) : quotePosix(s);
-}
-
-async function runCmd(cmd: string, args: string[], opts: { cwd?: string; input?: string; timeoutMs?: number } = {}): Promise<{ code: number | null; stdout: string; stderr: string }> {
-  return await new Promise((resolve) => {
-    const commandLine = [cmd, ...args.map(quoteArg)].join(" ");
-    const child = spawn(commandLine, {
-      cwd: opts.cwd,
-      shell: true,
-      stdio: ["pipe", "pipe", "pipe"],
-      env: process.env,
-    });
-    let stdout = "";
-    let stderr = "";
-    let done = false;
-    const finish = (code: number | null) => {
-      if (done) return;
-      done = true;
-      resolve({ code, stdout, stderr });
-    };
-    child.stdout.on("data", (d) => { stdout += String(d); });
-    child.stderr.on("data", (d) => { stderr += String(d); });
-    child.on("error", (e) => { stderr += `\n[spawn error] ${String(e)}`; finish(2); });
-    child.on("close", (code) => finish(code));
-    if (opts.input != null) child.stdin.write(opts.input);
-    child.stdin.end();
-    if (opts.timeoutMs && opts.timeoutMs > 0) {
-      setTimeout(() => {
-        if (done) return;
-        stderr += `\n[timeout] killed after ${opts.timeoutMs}ms`;
-        try { child.kill("SIGKILL"); } catch {}
-      }, opts.timeoutMs);
-    }
-  });
 }
 
 function extractRunEnd(stdout: string): RunEnd | undefined {
@@ -224,11 +178,14 @@ async function loadChecks(file: string): Promise<Check[]> {
   });
 }
 
-async function runKaneCheck(kaneCmd: string, check: Check): Promise<CheckResult> {
+async function runKaneCheck(kaneCmd: string, check: Check, hardTimeoutMs?: number): Promise<CheckResult> {
   const args = ["run", check.objective, "--url", check.url, "--headless", "--agent"];
   if (check.maxSteps) args.push("--max-steps", String(check.maxSteps));
   if (check.timeoutSeconds) args.push("--timeout", String(check.timeoutSeconds));
-  const { code, stdout, stderr } = await runCmd(kaneCmd, args, { timeoutMs: ((check.timeoutSeconds ?? 180) + 60) * 1000 });
+  const timeoutMs = hardTimeoutMs ?? ((check.timeoutSeconds ?? 180) + 60) * 1000;
+  const argv = splitCommandLine(kaneCmd);
+  if (argv.length === 0) throw new Error("--kane-cmd is empty");
+  const { code, stdout, stderr } = await runCmd(argv[0], [...argv.slice(1), ...args], { timeoutMs });
   const runEnd = extractRunEnd(stdout);
   const verdict = evaluateRunEnd(runEnd);
   return {
@@ -269,6 +226,14 @@ async function main() {
   if (!checksFile) { console.error("--checks is required"); process.exit(2); }
   const maxAttempts = Math.max(1, Number(args["max-attempts"] || 2));
   const kaneCmd = String(args["kane-cmd"] || (process.platform === "win32" ? "kane-cli.cmd" : "kane-cli"));
+  const kaneTimeoutArg = args["kane-timeout"] ? Number(args["kane-timeout"]) : NaN;
+  const kaneTimeoutMs = Number.isFinite(kaneTimeoutArg) && kaneTimeoutArg > 0
+    ? kaneTimeoutArg * 1000
+    : undefined;
+  if (args["kane-timeout"] && kaneTimeoutMs === undefined) {
+    console.error("--kane-timeout must be a positive number of seconds");
+    process.exit(2);
+  }
   const fixCmd = args["fix-cmd"] ? String(args["fix-cmd"]) : "";
   const reportFile = args.report ? String(args.report) : "";
 
@@ -284,7 +249,7 @@ async function main() {
     const history: CheckResult[] = [];
     for (let attempt = 1; attempt <= maxAttempts; attempt++) {
       console.log(`\n[bugboing] check=${check.name} attempt=${attempt}/${maxAttempts}`);
-      const r = await runKaneCheck(kaneCmd, check);
+      const r = await runKaneCheck(kaneCmd, check, kaneTimeoutMs);
       r.attempt = attempt;
       last = r;
       console.log(`[bugboing] trust=${r.trust} status=${r.status} reason=${r.reason} test_url=${r.testUrl ?? ""}`);

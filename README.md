@@ -158,12 +158,14 @@ Examples:
 ## CLI
 
 ```text
-bugboing verify --checks <checks.json> [--fix-cmd <cmd>] [--max-attempts <n>] [--report <file>] [--kane-cmd <cmd>]
+bugboing verify --checks <checks.json> [--fix-cmd <cmd>] [--max-attempts <n>] [--report <file>] [--kane-cmd <cmd>] [--kane-timeout <s>]
 ```
+
+`--kane-timeout` is a hard kill deadline for the whole Kane process tree (default: the check's `timeoutSeconds` + 60s). On timeout the check is `unverified`, never green, and BugBoing exits `1` instead of hanging.
 
 Exit codes:
 - `0` - all checks passed (after retries if any)
-- `1` - one or more checks failed after retries / no fix path
+- `1` - one or more checks failed after retries / no fix path / timed out
 - `2` - tool/config/runtime error
 
 ## Evidence
@@ -171,6 +173,7 @@ Exit codes:
 - `demo/report.json` - real Kane golden-path report (fail → fix → pass), v0.2.0 schema with `contract`, `trust`, `kaneVerified`, `verificationSource`, and `rawRunEnd`.
 - `tests/contract.test.ts` - contract tests proving: pass is green only on Kane `run_end` pass; exit `0` without `run_end` is NOT green; missing/unparseable/non-`run_end` verdict is NOT green.
 - `tests/loop.test.ts` - loop test proving fixer is invoked, Kane reruns, and green happens only after a Kane `run_end` pass.
+- `tests/timeout.test.ts` + `tests/proc.test.ts` - a check whose Kane command hangs (and ignores `SIGTERM`) is killed with its whole process tree; BugBoing exits `1` with `unverified_missing_run_end` instead of hanging on open pipes.
 - `demo/fix-generic.mjs` - deterministic payload-driven fixer demonstrating the stdin JSON interface (not a real agent; real agent CLIs can be plugged in via `--fix-cmd`).
 
 ## Tests
