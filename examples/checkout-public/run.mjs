@@ -1,7 +1,7 @@
 import { spawn, execFileSync } from "node:child_process";
 import { setTimeout as delay } from "node:timers/promises";
 import { createWriteStream } from "node:fs";
-import { copyFile, rm, writeFile } from "node:fs/promises";
+import { copyFile, readFile, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -70,10 +70,31 @@ child.stderr.on("data", (d) => { process.stderr.write(d); log.write(d); });
 const code = await new Promise((resolve) => child.on("close", resolve));
 log.end();
 
-// 3. Capture the diff the fixer made (before restoring).
+// 3. Capture the diff the fixer made (before restoring). The fixer commits the
+// fix, so working-tree diff is empty; compare against the known buggy baseline.
 try {
-  const diff = git(["diff", "--no-color", "--", "docs/checkout-public/app.js"]);
-  await writeFile(diffFile, diff, "utf8");
+  const buggy = await readFile(buggyApp, "utf8");
+  const fixed = await readFile(publicApp, "utf8");
+  if (buggy === fixed) {
+    await writeFile(diffFile, "", "utf8");
+  } else {
+    const a = path.join(root, ".git", "BUGBOING_buggy_app.js");
+    const b = path.join(root, ".git", "BUGBOING_fixed_app.js");
+    await writeFile(a, buggy, "utf8");
+    await writeFile(b, fixed, "utf8");
+    let diff = "";
+    try {
+      diff = execFileSync("git", ["diff", "--no-color", "--no-index", "--", a, b], { cwd: root, encoding: "utf8" });
+    } catch (e) {
+      // git diff --no-index exits 1 when files differ
+      diff = String(e?.stdout || "");
+    }
+    await rm(a, { force: true });
+    await rm(b, { force: true });
+    diff = diff.replaceAll(a.replaceAll("\\", "/"), "examples/checkout-bug/site/app.js");
+    diff = diff.replaceAll(b.replaceAll("\\", "/"), "docs/checkout-public/app.js");
+    await writeFile(diffFile, diff, "utf8");
+  }
 } catch (e) {
   console.error(`[run] could not capture diff: ${String(e)}`);
 }
