@@ -17,6 +17,8 @@ document.getElementById("apply").addEventListener("click", () => {
   discountRow.hidden = false;
   statusEl.textContent = "Promo code applied.";
 
-  const total = SUBTOTAL - DISCOUNT;
+  // BUG: the discount is shown in the cart, but the total still uses the
+  // subtotal. A "page loads" check is green; only a total assertion catches it.
+  const total = SUBTOTAL;
   totalEl.textContent = "$" + total.toFixed(2);
 });
