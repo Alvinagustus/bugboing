@@ -86,9 +86,14 @@ export async function takeScopeSnapshot(root: string): Promise<ScopeSnapshot> {
 }
 
 export function globToRegExp(glob: string): RegExp {
-  let p = toPosixPath(glob.trim());
+  let p = toPosixPath(glob.trim()).replace(/^\.\//, "");
   if (p.endsWith("/")) p += "**";
-  if (!/[*?]/.test(p)) p = p.replace(/\/+$/, "") + "/**";
+
+  if (!/[*?]/.test(p)) {
+    // An exact path matches the file itself or anything under it (directory).
+    const exact = p.replace(/\/+$/, "").replace(/[.+^${}()|[\]\\]/g, "\\$&");
+    return new RegExp(`^${exact}(?:/.*)?$`);
+  }
 
   let out = "^";
   for (let i = 0; i < p.length; i++) {

@@ -34,6 +34,11 @@ test("glob: directory globs stay inside their directory", () => {
   const bare = globToRegExp("site");
   assert.equal(bare.test("site/app.js"), true);
   assert.equal(bare.test("site-other/app.js"), false);
+
+  const file = globToRegExp("demo/index.html");
+  assert.equal(file.test("demo/index.html"), true, "an exact file path matches the file itself");
+  assert.equal(file.test("demo/index.html.bak"), false);
+  assert.equal(globToRegExp("./demo/index.html").test("demo/index.html"), true);
 });
 
 test("scope: allowed edits survive, out-of-scope edits are restored or deleted", async () => {
@@ -128,6 +133,18 @@ test("CLI: out-of-scope fixer edits are reverted before the Kane rerun", () => {
   const paths = first.scope.violations.map((v: { path: string }) => v.path).sort();
   assert.deepEqual(paths, ["outside.txt", "payload-seen.json", "site/checks.json"]);
   assert.equal(report.passed, true);
+  rmSync(dir, { recursive: true, force: true });
+});
+
+test("CLI: --allow-fix accepts an exact file path", () => {
+  const dir = makeProject();
+  const r = runCli(dir, ["--allow-fix", "site/app.js"]);
+  assert.equal(r.status, 0, r.stderr + "\n" + r.stdout);
+  assert.equal(readFileSync(path.join(dir, "site", "app.js"), "utf8").includes("fixed by the agent"), true);
+  assert.equal(existsSync(path.join(dir, "outside.txt")), false);
+
+  const report = JSON.parse(readFileSync(path.join(dir, "report.json"), "utf8"));
+  assert.deepEqual(report.checks[0].attemptHistory[0].scope.allowed, ["site/app.js"]);
   rmSync(dir, { recursive: true, force: true });
 });
 
