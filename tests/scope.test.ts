@@ -62,15 +62,21 @@ test("scope: allowed edits survive, out-of-scope edits are restored or deleted",
   rmSync(dir, { recursive: true, force: true });
 });
 
-test("scope: warn mode reports violations without touching files", async () => {
+test("scope: warn keeps ordinary edits but restores protected files", async () => {
   const dir = makeProject();
   const snap = await takeScopeSnapshot(dir);
   writeFileSync(path.join(dir, "outside.txt"), "kept\n", "utf8");
+  writeFileSync(path.join(dir, "README.md"), "# edited\n", "utf8");
+  rmSync(path.join(dir, "site", "checks.json"));
 
   const result = await enforceScope(snap, ["site/**"], ["site/checks.json"], "warn");
   assert.equal(existsSync(path.join(dir, "outside.txt")), true);
-  assert.deepEqual(result.violations.map((v) => `${v.kind}:${v.path}:${v.action}`), [
+  assert.equal(readFileSync(path.join(dir, "README.md"), "utf8"), "# edited\n");
+  assert.equal(existsSync(path.join(dir, "site", "checks.json")), true, "protected file is restored in warn mode");
+  assert.deepEqual(result.violations.map((v) => `${v.kind}:${v.path}:${v.action}`).sort(), [
     "created:outside.txt:kept",
+    "deleted:site/checks.json:restored",
+    "modified:README.md:kept",
   ]);
   rmSync(dir, { recursive: true, force: true });
 });
@@ -125,16 +131,22 @@ test("CLI: out-of-scope fixer edits are reverted before the Kane rerun", () => {
   rmSync(dir, { recursive: true, force: true });
 });
 
-test("CLI: --scope-guard warn keeps out-of-scope edits and reports them", () => {
+test("CLI: --scope-guard warn keeps out-of-scope edits but still restores checks.json", () => {
   const dir = makeProject();
   const r = runCli(dir, ["--scope-guard", "warn"]);
   assert.equal(r.status, 0, r.stderr + "\n" + r.stdout);
 
   assert.equal(existsSync(path.join(dir, "outside.txt")), true);
+  assert.equal(readFileSync(path.join(dir, "site", "checks.json"), "utf8").includes("objective"), true);
   const report = JSON.parse(readFileSync(path.join(dir, "report.json"), "utf8"));
   const first = report.checks[0].attemptHistory[0];
-  const actions = first.scope.violations.map((v: { action: string }) => v.action);
-  assert.equal(actions.length, 3);
-  assert.ok(actions.every((a: string) => a === "kept"));
+  const byPath = Object.fromEntries(
+    first.scope.violations.map((v: { path: string; action: string }) => [v.path, v.action]),
+  );
+  assert.deepEqual(byPath, {
+    "outside.txt": "kept",
+    "payload-seen.json": "kept",
+    "site/checks.json": "restored",
+  });
   rmSync(dir, { recursive: true, force: true });
 });

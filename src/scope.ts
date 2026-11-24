@@ -143,7 +143,10 @@ export async function enforceScope(
     if (snap.hashes.get(rel) === hash) continue;
     if (isAllowed(rel)) continue;
     const existed = snap.hashes.has(rel);
-    if (mode === "revert") {
+    // checks.json (and any other protected path) is restored even in warn mode:
+    // leaving a weakened check file behind would poison the next run.
+    const restore = mode === "revert" || protectedSet.has(rel);
+    if (restore) {
       const abs = path.join(snap.root, rel);
       if (existed) {
         await mkdir(path.dirname(abs), { recursive: true });
@@ -155,19 +158,20 @@ export async function enforceScope(
     violations.push({
       path: rel,
       kind: existed ? "modified" : "created",
-      action: mode === "revert" ? (existed ? "restored" : "deleted") : "kept",
+      action: restore ? (existed ? "restored" : "deleted") : "kept",
     });
   }
 
   for (const rel of snap.hashes.keys()) {
     if (now.has(rel)) continue;
     if (isAllowed(rel)) continue;
-    if (mode === "revert") {
+    const restore = mode === "revert" || protectedSet.has(rel);
+    if (restore) {
       const abs = path.join(snap.root, rel);
       await mkdir(path.dirname(abs), { recursive: true });
       await writeFile(abs, await readFile(path.join(snap.dir, rel)));
     }
-    violations.push({ path: rel, kind: "deleted", action: mode === "revert" ? "restored" : "kept" });
+    violations.push({ path: rel, kind: "deleted", action: restore ? "restored" : "kept" });
   }
 
   await rm(snap.dir, { recursive: true, force: true });
