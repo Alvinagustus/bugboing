@@ -1,0 +1,306 @@
+$ node dist/cli.js verify --checks E:\Hackathon\BugBoing\examples\inventory-filter\checks.json --fix-cmd node "E:\Hackathon\BugBoing\examples\inventory-filter\fix-with-opencode.mjs" --max-attempts 2 --max-credits 80 --allow-fix examples/inventory-filter/run-output.txt --kane-cmd E:\Opencode_workspace\npm-global\kane-cli.cmd --report E:\Hackathon\BugBoing\examples\inventory-filter\report.json
+
+[bugboing] CONTRACT: no_kane_pass_no_green
+[bugboing] Only Kane run_end status=passed counts as green. Fixer exit 0 is never proof.
+[bugboing] fix gate: verdict.confirmed && family=application_issue; scope-guard=revert
+
+[bugboing] check=inventory-filter attempt=1/2
+[bugboing] trust=kane_verified_fail status=failed reason=The pressed filter still shows 3 items and an Out of stock product, so the required filtered state was not produced. test_url=https://test-manager.lambdatest.com/projects/01M843ABM4C5EK249BW1SSWQDA/test-cases/01M8619THENRXMR6S3REMM4WWS/dashboard/share/US_OPI5RQ5U5FZJXU8RWI6T04K8AIE7XYUVZFWVSFTUXMU5YFGE28GUEKOLE8XZZAJS?type=summary&agentView=true&fqdn=summary-page
+[bugboing] invoking fix-cmd for inventory-filter (allowed: examples/inventory-filter/run-output.txt, examples/inventory-filter/site/**)
+[bugboing] fix-cmd exit=0 (not proof; rerunning Kane)
+[bugboing] scope: clean
+
+[bugboing] check=inventory-filter attempt=2/2
+[bugboing] trust=kane_verified_pass status=passed reason=Objective completed test_url=https://test-manager.lambdatest.com/projects/01M843ABM4C5EK249BW1SSWQDA/test-cases/01M861BZGP8TCFY4CMKCS40BYH/dashboard/share/US_MZKXRX94EOE4GGATO68CZ2G2YRDTC94Z78OBTIP39UH2VR0E5AN73X58IWA1T3VT?type=summary&agentView=true&fqdn=summary-page
+[bugboing] VERIFIED BY KANE: inventory-filter
+
+[bugboing] CONTRACT no_kane_pass_no_green: A check is green only when Kane CLI emits run_end with status=passed. Fixer exit codes and missing run_end are never trusted as proof.
+[bugboing] RESULT VERIFIED_PASS
+[bugboing] credits: consumed=13.22128 limit=80 exhausted=false
+[bugboing]   - inventory-filter: kane_verified_pass (Kane run_end reported status=passed.)
+{
+  "tool": "bugboing",
+  "version": "0.3.0",
+  "contract": {
+    "rule": "no_kane_pass_no_green",
+    "version": 1,
+    "enforced": true,
+    "description": "A check is green only when Kane CLI emits run_end with status=passed. Fixer exit codes and missing run_end are never trusted as proof."
+  },
+  "startedAt": "2026-11-24T05:43:36.188Z",
+  "finishedAt": "2026-11-24T05:45:47.075Z",
+  "passed": true,
+  "credits": {
+    "consumed": 13.22128,
+    "limit": 80,
+    "exhausted": false
+  },
+  "checks": [
+    {
+      "name": "inventory-filter",
+      "objective": "Click the 'In stock only' button. After filtering, the visible product count must be exactly '2 items' and the text 'Out of stock' must not be visible on the page. Fail if 3 items are shown or if 'Out of stock' is still visible.",
+      "url": "http://127.0.0.1:4182",
+      "attempt": 2,
+      "passed": true,
+      "kaneVerified": true,
+      "verificationSource": "kane_run_end",
+      "trust": "kane_verified_pass",
+      "trustReason": "Kane run_end reported status=passed.",
+      "status": "passed",
+      "reason": "Objective completed",
+      "resultCode": 100,
+      "reasonCode": "success.complete",
+      "testUrl": "https://test-manager.lambdatest.com/projects/01M843ABM4C5EK249BW1SSWQDA/test-cases/01M861BZGP8TCFY4CMKCS40BYH/dashboard/share/US_MZKXRX94EOE4GGATO68CZ2G2YRDTC94Z78OBTIP39UH2VR0E5AN73X58IWA1T3VT?type=summary&agentView=true&fqdn=summary-page",
+      "sessionDir": "C:\\Users\\<user>/.testmuai/kaneai/sessions\\e0b811e3-35aa-4d51-87fb-837fc99aa442",
+      "summary": "You asked to show only products that are in stock.\nSelected the “In stock only” filter.\nThe inventory updated to show 2 items, and no “Out of stock” text remained visible.",
+      "oneLiner": "filtered in-stock products on the inventory page",
+      "creditsConsumed": 7.017409999999998,
+      "rawRunEnd": {
+        "type": "run_end",
+        "status": "passed",
+        "summary": "You asked to show only products that are in stock.\nSelected the “In stock only” filter.\nThe inventory updated to show 2 items, and no “Out of stock” text remained visible.",
+        "one_liner": "filtered in-stock products on the inventory page",
+        "final_state": {
+          "url": "http://127.0.0.1:4182/",
+          "visible_product_count": "2 items",
+          "out_of_stock_text_visibility": "false"
+        },
+        "reason": "Objective completed",
+        "duration": 34.5,
+        "bifurcated": false,
+        "total_runs": 1,
+        "context": {
+          "memory": {
+            "visible_product_count_check": {
+              "extracted_value": "2 items",
+              "operator": "equals",
+              "transforms": [
+                "strip"
+              ],
+              "json_path": null,
+              "reasoning": "value: '2 items' -> '2 items' after ['strip']; equals '2 items' -> PASS",
+              "analyzer_type": "textual_visual",
+              "step": 3,
+              "query": "the visible product count text in the inventory main section",
+              "condition": "The visible product count is exactly '2 items'.",
+              "human_description": "Reading the visible product count",
+              "expected_value": "2 items",
+              "code_js": "Array.from(el(1).querySelectorAll('*')).map(e=>e.innerText.trim()).find(t=>t==='2 items') ?? null",
+              "wrapped_js": "(els) => {\n  const __m = {1: 0};\n  const el = (i) => els[__m[i]];\n  const __v = (Array.from(el(1).querySelectorAll('*')).map(e=>e.innerText.trim()).find(t=>t==='2 items') ?? null);\n  return (typeof __v === 'boolean' ? String(__v) : __v);\n}",
+              "locators": [
+                "internal:text=\"Inventory In stock only 2\"i"
+              ],
+              "needs_unit_conversion": false
+            },
+            "out_of_stock_text_visibility": {
+              "extracted_value": "false",
+              "operator": "equals",
+              "transforms": [],
+              "json_path": null,
+              "reasoning": "value: 'false' -> 'false'; equals 'false' -> PASS",
+              "analyzer_type": "textual_visual",
+              "step": 3,
+              "query": "whether the text 'Out of stock' is present in the inventory main section",
+              "condition": "The text 'Out of stock' is not visible on the page.",
+              "human_description": "Checking whether the out-of-stock text is present",
+              "expected_value": "false",
+              "subject": "the text 'Out of stock' on the page",
+              "must_be": "absent",
+              "code_js": "Array.from(el(1).querySelectorAll('*')).some(e=>e.innerText.trim()==='Out of stock'&&!!(e.offsetWidth||e.offsetHeight||e.getClientRects().length))",
+              "wrapped_js": "(els) => {\n  const __m = {1: 0};\n  const el = (i) => els[__m[i]];\n  const __v = (Array.from(el(1).querySelectorAll('*')).some(e=>e.innerText.trim()==='Out of stock'&&!!(e.offsetWidth||e.offsetHeight||e.getClientRects().length)));\n  return (typeof __v === 'boolean' ? String(__v) : __v);\n}",
+              "locators": [
+                "internal:text=\"Inventory In stock only 2\"i"
+              ],
+              "needs_unit_conversion": false
+            }
+          },
+          "variables": {
+            "visible_product_count_check": {
+              "syntax": "{{visible_product_count_check}}",
+              "value": "2 items",
+              "type": "memory",
+              "secret": false
+            },
+            "out_of_stock_text_visibility": {
+              "syntax": "{{out_of_stock_text_visibility}}",
+              "value": "false",
+              "type": "memory",
+              "secret": false
+            }
+          },
+          "pointer": "(passed) filtered in-stock products on the inventory page"
+        },
+        "credits_consumed": 7.017409999999998,
+        "session_dir": "C:\\Users\\<user>/.testmuai/kaneai/sessions\\e0b811e3-35aa-4d51-87fb-837fc99aa442",
+        "run_dir": "C:\\Users\\<user>/.testmuai/kaneai/sessions\\e0b811e3-35aa-4d51-87fb-837fc99aa442\\runs\\0",
+        "result_code": 100,
+        "reason_code": "success.complete",
+        "per_flow_metadata": [
+          {
+            "result_code": "100",
+            "reason_code": "success.complete",
+            "error_message": null,
+            "summary": "You asked to show only products that are in stock.\nSelected the “In stock only” filter.\nThe inventory updated to show 2 items, and no “Out of stock” text remained visible.",
+            "one_liner": "filtered in-stock products on the inventory page",
+            "credits_consumed": 7.017409999999998
+          }
+        ],
+        "run_id": "run-0",
+        "test_url": "https://test-manager.lambdatest.com/projects/01M843ABM4C5EK249BW1SSWQDA/test-cases/01M861BZGP8TCFY4CMKCS40BYH/dashboard/share/US_MZKXRX94EOE4GGATO68CZ2G2YRDTC94Z78OBTIP39UH2VR0E5AN73X58IWA1T3VT?type=summary&agentView=true&fqdn=summary-page",
+        "coverage": {
+          "status": "skipped"
+        },
+        "v": 1,
+        "ts": "2026-11-24T05:45:44.728Z"
+      },
+      "stdoutTail": "51-87fb-837fc99aa442\\\\evidence\\\\30d81ead-1ee7-4a16-8f6f-19be8c3edfd0.evidence\",\"v\":1,\"ts\":\"2026-11-24T05:45:44.728Z\"}\n{\"type\":\"run_end\",\"status\":\"passed\",\"summary\":\"You asked to show only products that are in stock.\\nSelected the “In stock only” filter.\\nThe inventory updated to show 2 items, and no “Out of stock” text remained visible.\",\"one_liner\":\"filtered in-stock products on the inventory page\",\"final_state\":{\"url\":\"http://127.0.0.1:4182/\",\"visible_product_count\":\"2 items\",\"out_of_stock_text_visibility\":\"false\"},\"reason\":\"Objective completed\",\"duration\":34.5,\"bifurcated\":false,\"total_runs\":1,\"context\":{\"memory\":{\"visible_product_count_check\":{\"extracted_value\":\"2 items\",\"operator\":\"equals\",\"transforms\":[\"strip\"],\"json_path\":null,\"reasoning\":\"value: '2 items' -> '2 items' after ['strip']; equals '2 items' -> PASS\",\"analyzer_type\":\"textual_visual\",\"step\":3,\"query\":\"the visible product count text in the inventory main section\",\"condition\":\"The visible product count is exactly '2 items'.\",\"human_description\":\"Reading the visible product count\",\"expected_value\":\"2 items\",\"code_js\":\"Array.from(el(1).querySelectorAll('*')).map(e=>e.innerText.trim()).find(t=>t==='2 items') ?? null\",\"wrapped_js\":\"(els) => {\\n  const __m = {1: 0};\\n  const el = (i) => els[__m[i]];\\n  const __v = (Array.from(el(1).querySelectorAll('*')).map(e=>e.innerText.trim()).find(t=>t==='2 items') ?? null);\\n  return (typeof __v === 'boolean' ? String(__v) : __v);\\n}\",\"locators\":[\"internal:text=\\\"Inventory In stock only 2\\\"i\"],\"needs_unit_conversion\":false},\"out_of_stock_text_visibility\":{\"extracted_value\":\"false\",\"operator\":\"equals\",\"transforms\":[],\"json_path\":null,\"reasoning\":\"value: 'false' -> 'false'; equals 'false' -> PASS\",\"analyzer_type\":\"textual_visual\",\"step\":3,\"query\":\"whether the text 'Out of stock' is present in the inventory main section\",\"condition\":\"The text 'Out of stock' is not visible on the page.\",\"human_description\":\"Checking whether the out-of-stock text is present\",\"expected_value\":\"false\",\"subject\":\"the text 'Out of stock' on the page\",\"must_be\":\"absent\",\"code_js\":\"Array.from(el(1).querySelectorAll('*')).some(e=>e.innerText.trim()==='Out of stock'&&!!(e.offsetWidth||e.offsetHeight||e.getClientRects().length))\",\"wrapped_js\":\"(els) => {\\n  const __m = {1: 0};\\n  const el = (i) => els[__m[i]];\\n  const __v = (Array.from(el(1).querySelectorAll('*')).some(e=>e.innerText.trim()==='Out of stock'&&!!(e.offsetWidth||e.offsetHeight||e.getClientRects().length)));\\n  return (typeof __v === 'boolean' ? String(__v) : __v);\\n}\",\"locators\":[\"internal:text=\\\"Inventory In stock only 2\\\"i\"],\"needs_unit_conversion\":false}},\"variables\":{\"visible_product_count_check\":{\"syntax\":\"{{visible_product_count_check}}\",\"value\":\"2 items\",\"type\":\"memory\",\"secret\":false},\"out_of_stock_text_visibility\":{\"syntax\":\"{{out_of_stock_text_visibility}}\",\"value\":\"false\",\"type\":\"memory\",\"secret\":false}},\"pointer\":\"(passed) filtered in-stock products on the inventory page\"},\"credits_consumed\":7.017409999999998,\"session_dir\":\"C:\\\\Users\\\\<user>/.testmuai/kaneai/sessions\\\\e0b811e3-35aa-4d51-87fb-837fc99aa442\",\"run_dir\":\"C:\\\\Users\\\\<user>/.testmuai/kaneai/sessions\\\\e0b811e3-35aa-4d51-87fb-837fc99aa442\\\\runs\\\\0\",\"result_code\":100,\"reason_code\":\"success.complete\",\"per_flow_metadata\":[{\"result_code\":\"100\",\"reason_code\":\"success.complete\",\"error_message\":null,\"summary\":\"You asked to show only products that are in stock.\\nSelected the “In stock only” filter.\\nThe inventory updated to show 2 items, and no “Out of stock” text remained visible.\",\"one_liner\":\"filtered in-stock products on the inventory page\",\"credits_consumed\":7.017409999999998}],\"run_id\":\"run-0\",\"test_url\":\"https://test-manager.lambdatest.com/projects/01M843ABM4C5EK249BW1SSWQDA/test-cases/01M861BZGP8TCFY4CMKCS40BYH/dashboard/share/US_MZKXRX94EOE4GGATO68CZ2G2YRDTC94Z78OBTIP39UH2VR0E5AN73X58IWA1T3VT?type=summary&agentView=true&fqdn=summary-page\",\"coverage\":{\"status\":\"skipped\"},\"v\":1,\"ts\":\"2026-11-24T05:45:44.728Z\"}\n",
+      "stderrTail": "Skill update available: not installed → 0.1.4 — run `kane-cli install skill`\n\nRunning on: Desktop · Chrome\nevidence: view locally with `kane-cli evidence serve C:\\Users\\<user>\\.testmuai\\kaneai\\sessions\\e0b811e3-35aa-4d51-87fb-837fc99aa442\\evidence\\30d81ead-1ee7-4a16-8f6f-19be8c3edfd0.evidence`\n",
+      "exitCode": 0,
+      "attemptHistory": [
+        {
+          "name": "inventory-filter",
+          "objective": "Click the 'In stock only' button. After filtering, the visible product count must be exactly '2 items' and the text 'Out of stock' must not be visible on the page. Fail if 3 items are shown or if 'Out of stock' is still visible.",
+          "url": "http://127.0.0.1:4182",
+          "attempt": 1,
+          "passed": false,
+          "kaneVerified": false,
+          "verificationSource": "kane_run_end",
+          "trust": "kane_verified_fail",
+          "trustReason": "Kane run_end reported status=failed; BugBoing treats this as not green.",
+          "status": "failed",
+          "reason": "The pressed filter still shows 3 items and an Out of stock product, so the required filtered state was not produced.",
+          "resultCode": 740,
+          "reasonCode": "assertion_error.confirmed_product_bug",
+          "testUrl": "https://test-manager.lambdatest.com/projects/01M843ABM4C5EK249BW1SSWQDA/test-cases/01M8619THENRXMR6S3REMM4WWS/dashboard/share/US_OPI5RQ5U5FZJXU8RWI6T04K8AIE7XYUVZFWVSFTUXMU5YFGE28GUEKOLE8XZZAJS?type=summary&agentView=true&fqdn=summary-page",
+          "sessionDir": "C:\\Users\\<user>/.testmuai/kaneai/sessions\\76a43839-0ee6-4094-9c84-9961a8d789de",
+          "summary": "The inventory filter did not apply the requested in-stock-only view after the button was clicked.\nFix the In stock only button so it removes unavailable products and updates the displayed count to 2 items.\nevidence: objective_contradiction: The pressed filter still shows 3 items and an Out of stock product, so the required filtered state was not produced.",
+          "oneLiner": "Clicking the In stock only button did not filter the inventory to the two available products.",
+          "creditsConsumed": 6.20387,
+          "rawRunEnd": {
+            "type": "run_end",
+            "status": "failed",
+            "summary": "The inventory filter did not apply the requested in-stock-only view after the button was clicked.\nFix the In stock only button so it removes unavailable products and updates the displayed count to 2 items.\nevidence: objective_contradiction: The pressed filter still shows 3 items and an Out of stock product, so the required filtered state was not produced.",
+            "one_liner": "Clicking the In stock only button did not filter the inventory to the two available products.",
+            "final_state": {},
+            "reason": "The pressed filter still shows 3 items and an Out of stock product, so the required filtered state was not produced.",
+            "duration": 30.4,
+            "bifurcated": false,
+            "total_runs": 1,
+            "context": {
+              "memory": {},
+              "variables": {},
+              "pointer": "(failed) Clicking the In stock only button did not filter the inventory to the two available products."
+            },
+            "credits_consumed": 6.20387,
+            "session_dir": "C:\\Users\\<user>/.testmuai/kaneai/sessions\\76a43839-0ee6-4094-9c84-9961a8d789de",
+            "run_dir": "C:\\Users\\<user>/.testmuai/kaneai/sessions\\76a43839-0ee6-4094-9c84-9961a8d789de\\runs\\0",
+            "result_code": 740,
+            "reason_code": "assertion_error.confirmed_product_bug",
+            "per_flow_metadata": [
+              {
+                "result_code": "740",
+                "reason_code": "assertion_error.confirmed_product_bug",
+                "error_message": "The pressed filter still shows 3 items and an Out of stock product, so the required filtered state was not produced.",
+                "summary": "The inventory filter did not apply the requested in-stock-only view after the button was clicked.\nFix the In stock only button so it removes unavailable products and updates the displayed count to 2 items.\nevidence: objective_contradiction: The pressed filter still shows 3 items and an Out of stock product, so the required filtered state was not produced.",
+                "one_liner": "Clicking the In stock only button did not filter the inventory to the two available products.",
+                "credits_consumed": 6.20387
+              }
+            ],
+            "run_id": "run-0",
+            "verdict": {
+              "confirmed": true,
+              "status": "failed",
+              "family": "application_issue",
+              "category": "functional_defect",
+              "category_proposal": "",
+              "severity": "major",
+              "root_cause": "The inventory filter did not apply the requested in-stock-only view after the button was clicked.",
+              "agent_fault_assessment": "The agent navigated to the supplied page and clicked the requested “In stock only” control. The action was recorded as successful, and the post-click state still violated the objective, so the agent did not cause the outcome.",
+              "bug_title": "In-stock filter leaves unavailable product visible",
+              "signals": [
+                {
+                  "excerpt": "The pressed filter still shows 3 items and an Out of stock product, so the required filtered state was not produced.",
+                  "kind": "objective_contradiction",
+                  "step": "0-2"
+                }
+              ],
+              "confidence": 0.99,
+              "suggestion": "Fix the In stock only button so it removes unavailable products and updates the displayed count to 2 items.",
+              "one_liner": "Clicking the In stock only button did not filter the inventory to the two available products.",
+              "relevant_steps": [
+                2
+              ],
+              "culprit_step": "0-3",
+              "credits_consumed": 2.2960000000000003,
+              "known_bug_id": "BUG-10",
+              "category_name": "",
+              "mode": "terminal"
+            },
+            "test_url": "https://test-manager.lambdatest.com/projects/01M843ABM4C5EK249BW1SSWQDA/test-cases/01M8619THENRXMR6S3REMM4WWS/dashboard/share/US_OPI5RQ5U5FZJXU8RWI6T04K8AIE7XYUVZFWVSFTUXMU5YFGE28GUEKOLE8XZZAJS?type=summary&agentView=true&fqdn=summary-page",
+            "coverage": {
+              "status": "skipped"
+            },
+            "v": 1,
+            "ts": "2026-11-24T05:44:20.431Z"
+          },
+          "verdict": {
+            "confirmed": true,
+            "status": "failed",
+            "family": "application_issue",
+            "category": "functional_defect",
+            "category_proposal": "",
+            "severity": "major",
+            "root_cause": "The inventory filter did not apply the requested in-stock-only view after the button was clicked.",
+            "agent_fault_assessment": "The agent navigated to the supplied page and clicked the requested “In stock only” control. The action was recorded as successful, and the post-click state still violated the objective, so the agent did not cause the outcome.",
+            "bug_title": "In-stock filter leaves unavailable product visible",
+            "signals": [
+              {
+                "excerpt": "The pressed filter still shows 3 items and an Out of stock product, so the required filtered state was not produced.",
+                "kind": "objective_contradiction",
+                "step": "0-2"
+              }
+            ],
+            "confidence": 0.99,
+            "suggestion": "Fix the In stock only button so it removes unavailable products and updates the displayed count to 2 items.",
+            "one_liner": "Clicking the In stock only button did not filter the inventory to the two available products.",
+            "relevant_steps": [
+              2
+            ],
+            "culprit_step": "0-3",
+            "credits_consumed": 2.2960000000000003,
+            "known_bug_id": "BUG-10",
+            "category_name": "",
+            "mode": "terminal"
+          },
+          "repair": {
+            "suggestion": "Fix the In stock only button so it removes unavailable products and updates the displayed count to 2 items.",
+            "culpritStep": "0-3",
+            "rootCause": "The inventory filter did not apply the requested in-stock-only view after the button was clicked.",
+            "bugTitle": "In-stock filter leaves unavailable product visible",
+            "category": "functional_defect",
+            "severity": "major"
+          },
+          "stdoutTail": "ock only button\",\"v\":1,\"ts\":\"2026-11-24T05:43:59.954Z\"}\n{\"step\":4,\"status\":\"running\",\"remark\":\"Step 3\",\"v\":1,\"ts\":\"2026-11-24T05:44:00.546Z\"}\n{\"step\":4,\"status\":\"failed\",\"remark\":\"agent_info: The pressed filter still shows 3 items and an Out of stock product, so the requi\",\"v\":1,\"ts\":\"2026-11-24T05:44:07.450Z\"}\n{\"type\":\"coverage\",\"status\":\"skipped\",\"reason\":\"not_assurance_project\",\"pack\":\"C:\\\\Users\\\\<user>\\\\.testmuai\\\\kaneai\\\\sessions\\\\76a43839-0ee6-4094-9c84-9961a8d789de\\\\evidence\\\\8d886d52-6b01-48c0-9afd-2c50bad2a85b.evidence\",\"v\":1,\"ts\":\"2026-11-24T05:44:20.431Z\"}\n{\"type\":\"run_end\",\"status\":\"failed\",\"summary\":\"The inventory filter did not apply the requested in-stock-only view after the button was clicked.\\nFix the In stock only button so it removes unavailable products and updates the displayed count to 2 items.\\nevidence: objective_contradiction: The pressed filter still shows 3 items and an Out of stock product, so the required filtered state was not produced.\",\"one_liner\":\"Clicking the In stock only button did not filter the inventory to the two available products.\",\"final_state\":{},\"reason\":\"The pressed filter still shows 3 items and an Out of stock product, so the required filtered state was not produced.\",\"duration\":30.4,\"bifurcated\":false,\"total_runs\":1,\"context\":{\"memory\":{},\"variables\":{},\"pointer\":\"(failed) Clicking the In stock only button did not filter the inventory to the two available products.\"},\"credits_consumed\":6.20387,\"session_dir\":\"C:\\\\Users\\\\<user>/.testmuai/kaneai/sessions\\\\76a43839-0ee6-4094-9c84-9961a8d789de\",\"run_dir\":\"C:\\\\Users\\\\<user>/.testmuai/kaneai/sessions\\\\76a43839-0ee6-4094-9c84-9961a8d789de\\\\runs\\\\0\",\"result_code\":740,\"reason_code\":\"assertion_error.confirmed_product_bug\",\"per_flow_metadata\":[{\"result_code\":\"740\",\"reason_code\":\"assertion_error.confirmed_product_bug\",\"error_message\":\"The pressed filter still shows 3 items and an Out of stock product, so the required filtered state was not produced.\",\"summary\":\"The inventory filter did not apply the requested in-stock-only view after the button was clicked.\\nFix the In stock only button so it removes unavailable products and updates the displayed count to 2 items.\\nevidence: objective_contradiction: The pressed filter still shows 3 items and an Out of stock product, so the required filtered state was not produced.\",\"one_liner\":\"Clicking the In stock only button did not filter the inventory to the two available products.\",\"credits_consumed\":6.20387}],\"run_id\":\"run-0\",\"verdict\":{\"confirmed\":true,\"status\":\"failed\",\"family\":\"application_issue\",\"category\":\"functional_defect\",\"category_proposal\":\"\",\"severity\":\"major\",\"root_cause\":\"The inventory filter did not apply the requested in-stock-only view after the button was clicked.\",\"agent_fault_assessment\":\"The agent navigated to the supplied page and clicked the requested “In stock only” control. The action was recorded as successful, and the post-click state still violated the objective, so the agent did not cause the outcome.\",\"bug_title\":\"In-stock filter leaves unavailable product visible\",\"signals\":[{\"excerpt\":\"The pressed filter still shows 3 items and an Out of stock product, so the required filtered state was not produced.\",\"kind\":\"objective_contradiction\",\"step\":\"0-2\"}],\"confidence\":0.99,\"suggestion\":\"Fix the In stock only button so it removes unavailable products and updates the displayed count to 2 items.\",\"one_liner\":\"Clicking the In stock only button did not filter the inventory to the two available products.\",\"relevant_steps\":[2],\"culprit_step\":\"0-3\",\"credits_consumed\":2.2960000000000003,\"known_bug_id\":\"BUG-10\",\"category_name\":\"\",\"mode\":\"terminal\"},\"test_url\":\"https://test-manager.lambdatest.com/projects/01M843ABM4C5EK249BW1SSWQDA/test-cases/01M8619THENRXMR6S3REMM4WWS/dashboard/share/US_OPI5RQ5U5FZJXU8RWI6T04K8AIE7XYUVZFWVSFTUXMU5YFGE28GUEKOLE8XZZAJS?type=summary&agentView=true&fqdn=summary-page\",\"coverage\":{\"status\":\"skipped\"},\"v\":1,\"ts\":\"2026-11-24T05:44:20.431Z\"}\n",
+          "stderrTail": "Skill update available: not installed → 0.1.4 — run `kane-cli install skill`\n\nRunning on: Desktop · Chrome\nevidence: view locally with `kane-cli evidence serve C:\\Users\\<user>\\.testmuai\\kaneai\\sessions\\76a43839-0ee6-4094-9c84-9961a8d789de\\evidence\\8d886d52-6b01-48c0-9afd-2c50bad2a85b.evidence`\n",
+          "exitCode": 1,
+          "fixCmd": "node \"E:\\Hackathon\\BugBoing\\examples\\inventory-filter\\fix-with-opencode.mjs\"",
+          "fixExitCode": 0,
+          "fixStdoutTail": " the button state toggles, but out-of-stock items are never hidden.\\r\\n    // A \\\"page renders\\\" check passes; only filtering behavior catches this.\\r\\n    const hide = false;\",\"newString\":\"    const hide = showInStockOnly && item.dataset.stock === \\\"out\\\";\"},\"output\":\"Edited examples/inventory-filter/site/app.js (1 replacement)\",\"title\":\"edit\",\"metadata\":{\"metadata\":{\"files\":[{\"file\":\"examples/inventory-filter/site/app.js\",\"patch\":\"Index: examples/inventory-filter/site/app.js\\n===================================================================\\n--- examples/inventory-filter/site/app.js\\n+++ examples/inventory-filter/site/app.js\\n@@ -4,11 +4,9 @@\\n \\r\\n function render(showInStockOnly) {\\r\\n   let visible = 0;\\r\\n   for (const item of items) {\\r\\n-    // BUG: the button state toggles, but out-of-stock items are never hidden.\\r\\n-    // A \\\"page renders\\\" check passes; only filtering behavior catches this.\\r\\n-    const hide = false;\\r\\n+    const hide = showInStockOnly && item.dataset.stock === \\\"out\\\";\\r\\n     item.hidden = hide;\\r\\n     if (!hide) visible += 1;\\r\\n   }\\r\\n   countEl.textContent = visible + (visible === 1 ? \\\" item\\\" : \\\" items\\\");\\r\\n\",\"status\":\"modified\",\"additions\":1,\"deletions\":3}],\"truncated\":false},\"content\":[{\"type\":\"text\",\"text\":\"Edited examples/inventory-filter/site/app.js (1 replacement)\"}],\"providerCall\":{\"executed\":false},\"providerResult\":{\"executed\":false},\"rawInput\":\"{\\\"path\\\": \\\"examples/inventory-filter/site/app.js\\\", \\\"oldString\\\": \\\"    // BUG: the button state toggles, but out-of-stock items are never hidden.\\\\r\\\\n    // A \\\\\\\"page renders\\\\\\\" check passes; only filtering behavior catches this.\\\\r\\\\n    const hide = false;\\\", \\\"newString\\\": \\\"    const hide = showInStockOnly && item.dataset.stock === \\\\\\\"out\\\\\\\";\\\"}\"},\"time\":{\"start\":1795499078766,\"end\":1795499079085}}}}\r\n{\"type\":\"step_finish\",\"timestamp\":1795499079396,\"sessionID\":\"ses_df3ea8765ffewyA5CmB5lIJkA1\",\"part\":{\"id\":\"prt_20c15b6e4001WYciRs5ONj2N9a\",\"sessionID\":\"ses_df3ea8765ffewyA5CmB5lIJkA1\",\"messageID\":\"msg_20c159c92001YVVYRWG6ZtyCjc\",\"type\":\"step-finish\",\"reason\":\"tool-calls\",\"snapshot\":\"a5a44d84455de5543824e95d971f439b22c0ae2e\",\"cost\":0,\"tokens\":{\"input\":1887,\"output\":89,\"reasoning\":184,\"cache\":{\"read\":8704,\"write\":0}}}}\r\n{\"type\":\"step_start\",\"timestamp\":1795499083106,\"sessionID\":\"ses_df3ea8765ffewyA5CmB5lIJkA1\",\"part\":{\"id\":\"prt_20c15c5620013QxMWTLXTz8xcb\",\"sessionID\":\"ses_df3ea8765ffewyA5CmB5lIJkA1\",\"messageID\":\"msg_20c15b6ef001fQEw33YbZcs3dE\",\"type\":\"step-start\",\"snapshot\":\"a5a44d84455de5543824e95d971f439b22c0ae2e\"}}\r\n{\"type\":\"text\",\"timestamp\":1795499086162,\"sessionID\":\"ses_df3ea8765ffewyA5CmB5lIJkA1\",\"part\":{\"id\":\"prt_20c15ce570012A0OjSNfznrMAF\",\"sessionID\":\"ses_df3ea8765ffewyA5CmB5lIJkA1\",\"messageID\":\"msg_20c15b6ef001fQEw33YbZcs3dE\",\"type\":\"text\",\"text\":\"## Cause\\n\\n`examples/inventory-filter/site/app.js:5-14` — `render(showInStockOnly)` ignored its argument and hardcoded `const hide = false`, so toggling \\\"In stock only\\\" updated button state/count logic input but never hid out-of-stock items.\\n\\n## Fix\\n\\n- `examples/inventory-filter/site/app.js`: hide out-of-stock items when filtering is active:\\n\\n```js\\nconst hide = showInStockOnly && item.dataset.stock === \\\"out\\\";\\n```\\n\\nThis makes only the two `data-stock=\\\"in\\\"` items visible when \\\"In stock only\\\" is pressed, yielding `2 items` and removing the `Out of stock` text from view. No files outside `examples/inventory-filter/site/` were changed.\",\"time\":{\"start\":1795499085399,\"end\":1795499086162}}}\r\n{\"type\":\"step_finish\",\"timestamp\":1795499086220,\"sessionID\":\"ses_df3ea8765ffewyA5CmB5lIJkA1\",\"part\":{\"id\":\"prt_20c15d18c00138OpjxmFybFzYR\",\"sessionID\":\"ses_df3ea8765ffewyA5CmB5lIJkA1\",\"messageID\":\"msg_20c15b6ef001fQEw33YbZcs3dE\",\"type\":\"step-finish\",\"reason\":\"stop\",\"snapshot\":\"a5a44d84455de5543824e95d971f439b22c0ae2e\",\"cost\":0,\"tokens\":{\"input\":5255,\"output\":165,\"reasoning\":165,\"cache\":{\"read\":5632,\"write\":0}}}}\r\n[opencode-fixer] exit=0 signal= model=opencode/iceman-free\n",
+          "fixStderrTail": "",
+          "fixDecision": {
+            "invoked": true,
+            "reason": "Kane confirmed an application issue."
+          },
+          "scope": {
+            "enforced": true,
+            "allowed": [
+              "examples/inventory-filter/run-output.txt",
+              "examples/inventory-filter/site/**"
+            ],
+            "violations": []
+          }
+        }
+      ]
+    }
+  ]
+}

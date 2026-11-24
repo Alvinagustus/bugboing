@@ -1,0 +1,15 @@
+diff --git a/examples/inventory-filter/site/app.js b/examples/inventory-filter/site/app.js
+index 7d0cd19..6dc8257 100644
+--- a/examples/inventory-filter/site/app.js
++++ b/examples/inventory-filter/site/app.js
+@@ -5,9 +5,7 @@ const items = Array.from(document.querySelectorAll("#products li"));
+ function render(showInStockOnly) {
+   let visible = 0;
+   for (const item of items) {
+-    // BUG: the button state toggles, but out-of-stock items are never hidden.
+-    // A "page renders" check passes; only filtering behavior catches this.
+-    const hide = false;
++    const hide = showInStockOnly && item.dataset.stock === "out";
+     item.hidden = hide;
+     if (!hide) visible += 1;
+   }
