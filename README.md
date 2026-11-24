@@ -79,7 +79,7 @@ The report makes this machine-visible:
 ```bash
 git clone https://github.com/Alvinagustus/bugboing
 cd bugboing
-npm install
+npm install   # runs prepare -> builds dist/cli.js
 ```
 
 ### Run the demo (golden path)
@@ -97,7 +97,8 @@ Manual run:
 ```bash
 node demo/serve.mjs
 # in another terminal
-npx tsx src/cli.ts verify --checks demo/checks.json --fix-cmd "node demo/fix-generic.mjs" --max-attempts 2 --kane-cmd kane-cli.cmd --report demo/report.json
+node dist/cli.js verify --checks demo/checks.json --fix-cmd "node demo/fix-generic.mjs" --max-attempts 2 --kane-cmd kane-cli.cmd --report demo/report.json
+# dev fallback: npx tsx src/cli.ts verify ...
 ```
 
 ## Checks Format
@@ -167,9 +168,10 @@ Exit codes:
 
 ## Evidence
 
-- `demo/report.json` - golden-path report from a real Kane run (fail → fix → pass). The v0.2.0 report schema includes `contract`, `trust`, `kaneVerified`, `verificationSource`, and `rawRunEnd`; regenerate with `npm run demo` to capture a fresh report in the new schema.
-- `tests/contract.test.ts` - contract tests proving: pass is green only on Kane `run_end` pass; exit `0` without `run_end` is NOT green; missing `run_end` is unverified.
-- `demo/fix-generic.mjs` - payload-driven fixer proving the interface is agent-agnostic.
+- `demo/report.json` - real Kane golden-path report (fail → fix → pass), v0.2.0 schema with `contract`, `trust`, `kaneVerified`, `verificationSource`, and `rawRunEnd`.
+- `tests/contract.test.ts` - contract tests proving: pass is green only on Kane `run_end` pass; exit `0` without `run_end` is NOT green; missing/unparseable/non-`run_end` verdict is NOT green.
+- `tests/loop.test.ts` - loop test proving fixer is invoked, Kane reruns, and green happens only after a Kane `run_end` pass.
+- `demo/fix-generic.mjs` - deterministic payload-driven fixer demonstrating the stdin JSON interface (not a real agent; real agent CLIs can be plugged in via `--fix-cmd`).
 
 ## Tests
 

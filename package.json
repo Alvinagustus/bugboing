@@ -1,18 +1,27 @@
 {
   "name": "bugboing",
   "version": "0.2.0",
-  "private": true,
   "type": "module",
-  "description": "Fail -> Kane evidence -> agent fix -> rerun loop for web verification.",
+  "description": "Strict Kane-verified fail -> fix -> rerun CLI. No Kane run_end pass = no green.",
   "bin": {
     "bugboing": "dist/cli.js"
   },
+  "files": [
+    "dist",
+    "demo",
+    "src",
+    "tests",
+    "README.md",
+    "LICENSE",
+    "tsconfig.json"
+  ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
+    "prepare": "npm run build",
     "dev": "tsx src/cli.ts",
     "demo": "node demo/run-demo.mjs",
     "demo:help": "tsx src/cli.ts --help",
-    "test": "node --test --import tsx tests/smoke.test.ts tests/contract.test.ts",
+    "test": "node --test --import tsx tests/smoke.test.ts tests/contract.test.ts tests/loop.test.ts",
     "smoke": "node --test --import tsx tests/smoke.test.ts"
   },
   "license": "MIT",
