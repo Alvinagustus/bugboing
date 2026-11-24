@@ -19,14 +19,18 @@ const before = `  // BUG: the discount is shown in the cart, but the total still
   const total = SUBTOTAL;`;
 const after = `  const total = SUBTOTAL - DISCOUNT;`;
 
-const src = await readFile(target, "utf8");
-if (src.includes(after) && !src.includes(before)) {
+const raw = await readFile(target, "utf8");
+const eol = raw.includes("\r\n") ? "\r\n" : "\n";
+const src = raw.replace(/\r\n/g, "\n");
+const beforeN = before.replace(/\r\n/g, "\n");
+const afterN = after.replace(/\r\n/g, "\n");
+if (src.includes(afterN) && !src.includes(beforeN)) {
   console.log("[public-fix] already fixed locally");
-} else if (!src.includes(before)) {
+} else if (!src.includes(beforeN)) {
   console.error("[public-fix] expected buggy block not found; refusing to guess");
   process.exit(1);
 } else {
-  await writeFile(target, src.replace(before, after), "utf8");
+  await writeFile(target, src.replace(beforeN, afterN).replace(/\n/g, eol), "utf8");
   console.log("[public-fix] patched docs/checkout-public/app.js");
 }
 

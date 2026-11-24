@@ -29,11 +29,15 @@ const before = `  // BUG: the discount is shown in the cart, but the total still
   const total = SUBTOTAL;`;
 const after = `  const total = SUBTOTAL - DISCOUNT;`;
 
-const source = await readFile(target, "utf8");
-if (!source.includes(before)) {
+const raw = await readFile(target, "utf8");
+const eol = raw.includes("\r\n") ? "\r\n" : "\n";
+const source = raw.replace(/\r\n/g, "\n");
+const beforeN = before.replace(/\r\n/g, "\n");
+const afterN = after.replace(/\r\n/g, "\n");
+if (!source.includes(beforeN)) {
   console.error("[checkout-fix] expected buggy total block not found; refusing to guess");
   process.exit(1);
 }
 
-await writeFile(target, source.replace(before, after), "utf8");
+await writeFile(target, source.replace(beforeN, afterN).replace(/\n/g, eol), "utf8");
 console.log(`[checkout-fix] patched ${path.relative(process.cwd(), target)} (total = subtotal - discount)`);
