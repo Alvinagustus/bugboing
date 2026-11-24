@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>BugBoing Inventory</title>
+    <style>
+      body { font: 16px/1.5 system-ui, sans-serif; margin: 0; background: #f6f4ef; color: #171717; }
+      main { max-width: 36rem; margin: 4rem auto; padding: 2rem; background: #fff; border: 1px solid #ddd7cb; border-radius: 12px; }
+      h1 { margin-top: 0; font-size: 1.5rem; }
+      .toolbar { display: flex; gap: .5rem; align-items: center; margin: 1rem 0; }
+      button { font: inherit; padding: .4rem .8rem; cursor: pointer; border: 1px solid #bbb; background: #fff; border-radius: 6px; }
+      button[aria-pressed="true"] { background: #171717; color: #fff; border-color: #171717; }
+      ul { list-style: none; padding: 0; margin: 0; }
+      li { display: flex; justify-content: space-between; padding: .6rem 0; border-top: 1px solid #eee; }
+      .stock { font-size: .875rem; color: #6b6459; }
+      .out { color: #9a3412; }
+      #count { margin-left: auto; color: #6b6459; font-size: .875rem; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Inventory</h1>
+      <div class="toolbar">
+        <button id="filter-in-stock" type="button" aria-pressed="false">In stock only</button>
+        <span id="count" aria-live="polite">3 items</span>
+      </div>
+      <ul id="products" aria-label="Products">
+        <li data-stock="in"><span class="name">Keyboard</span><span class="stock">In stock</span></li>
+        <li data-stock="out"><span class="name">Mouse</span><span class="stock out">Out of stock</span></li>
+        <li data-stock="in"><span class="name">Monitor</span><span class="stock">In stock</span></li>
+      </ul>
+    </main>
+    <script src="./app.js"></script>
+  </body>
+</html>

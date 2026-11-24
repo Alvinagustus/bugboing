@@ -1,0 +1,10 @@
+[
+  {
+    "name": "inventory-filter",
+    "url": "http://127.0.0.1:4182",
+    "objective": "Click the 'In stock only' button. After filtering, the visible product count must be exactly '2 items' and the text 'Out of stock' must not be visible on the page. Fail if 3 items are shown or if 'Out of stock' is still visible.",
+    "timeoutSeconds": 120,
+    "maxSteps": 50,
+    "fixPaths": ["examples/inventory-filter/site/**"]
+  }
+]

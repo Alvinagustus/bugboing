@@ -1,0 +1,10 @@
+[
+  {
+    "name": "profile-required-name",
+    "url": "http://127.0.0.1:4183",
+    "objective": "Clear the Name field so it is empty, then click 'Save changes'. The page must show the validation message 'Name is required' and must NOT show 'Saved!'. Fail if 'Saved!' appears or if 'Name is required' is missing.",
+    "timeoutSeconds": 120,
+    "maxSteps": 50,
+    "fixPaths": ["examples/profile-save/site/**"]
+  }
+]
