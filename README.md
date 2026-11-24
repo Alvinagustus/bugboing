@@ -216,7 +216,7 @@ Exit codes:
 - `tests/gating.test.ts` - verdict gating (`confirmed` + `application_issue`), repair-packet payload, and `--max-credits`; the refusal cases assert the fixer did **not** run.
 - `tests/scope.test.ts` - scope guard: allowed edits survive, out-of-scope edits are reverted or deleted, `checks.json` is restored, and `warn` mode reports without touching files.
 - `tests/timeout.test.ts` + `tests/proc.test.ts` - a check whose Kane command hangs (and ignores `SIGTERM`) is killed with its whole process tree; BugBoing exits `2` with `unverified_missing_run_end` instead of hanging on open pipes.
-- `demo/fix-generic.mjs` - deterministic payload-driven fixer demonstrating the stdin JSON interface (not a real agent; see `examples/real-agent-loop/` for one real agent run).
+- `demo/fix-generic.mjs` - deterministic payload-driven fixer demonstrating the stdin JSON interface (not a real agent; see the three real-agent cookbook loops above).
 
 ## Tests
 
