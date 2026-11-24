@@ -5,6 +5,8 @@ BugBoing is a strict Kane-verified CLI wrapper for AI fix loops. It can run a fi
 
 > Hackathon: KaneCLI Online Hackathon (TestMu AI). Built for web verification with Kane CLI as the load-bearing verification engine.
 
+<img src="assets/bugboing-cover.png" alt="BugBoing: strict Kane-verified fixes. No run_end pass, no green." width="100%" />
+
 ## Problem
 
 AI coding agents can edit code fast, but they often miss the last mile: *did the fix actually work in a real browser?* A fixer can exit `0`, print "done", or patch the wrong thing — and you still don't have browser proof. BugBoing closes that gap by making Kane CLI the only pass/fail oracle.
