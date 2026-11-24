@@ -49,13 +49,16 @@ Set `KANE_CMD` on Windows if `kane-cli.cmd` is not on `PATH`.
 
 ## Results
 
-Filled in from a real Kane run. See `report.json` for the machine-readable version.
+From `report.json` (24 Nov 2026, `bugboing 0.3.0`):
 
 | Attempt | Who | Result | Credits |
 |---|---|---|---|
-| 1 | Kane CLI | _pending_ | _pending_ |
-| — | `fix-total.mjs` | deterministic one-line fix | 0 |
-| 2 | Kane CLI | _pending_ | _pending_ |
+| 1 | Kane CLI | `740`, `assertion_error.confirmed_product_bug`, verdict `confirmed: true`, family `application_issue`, category `functional_defect`, severity `major` — “SAVE10 shown as applied with a $10.00 discount, but the checkout total remains $100.00 instead of $90.00.” | 21.34 |
+| — | `fix-total.mjs` | deterministic one-line fix: `const total = SUBTOTAL - DISCOUNT;` (exit 0, not proof) | 0 |
+| 2 | Kane CLI | `100`, `success.complete`, `VERIFIED_PASS`, `final_state.order_total = "$90.00"` | 12.83 |
+
+Total 34.18 credits (`--max-credits 80`). Both Kane `test_url` links are preserved in
+`report.json` and `run-output.txt`. Local user paths are sanitized to `<user>`.
 
 ## Scope (honest)
 

@@ -1,0 +1,301 @@
+{
+  "tool": "bugboing",
+  "version": "0.3.0",
+  "contract": {
+    "rule": "no_kane_pass_no_green",
+    "version": 1,
+    "enforced": true,
+    "description": "A check is green only when Kane CLI emits run_end with status=passed. Fixer exit codes and missing run_end are never trusted as proof."
+  },
+  "startedAt": "2026-11-24T04:48:36.237Z",
+  "finishedAt": "2026-11-24T04:50:32.404Z",
+  "passed": true,
+  "credits": {
+    "consumed": 34.17518,
+    "limit": 80,
+    "exhausted": false
+  },
+  "checks": [
+    {
+      "name": "checkout-total",
+      "objective": "On the checkout page, type SAVE10 into the promo code field and click Apply. After the discount appears, the order total must be exactly $90.00. Fail if the order total shows $100.00 or any amount other than $90.00.",
+      "url": "http://127.0.0.1:4181",
+      "attempt": 2,
+      "passed": true,
+      "kaneVerified": true,
+      "verificationSource": "kane_run_end",
+      "trust": "kane_verified_pass",
+      "trustReason": "Kane run_end reported status=passed.",
+      "status": "passed",
+      "reason": "Objective completed",
+      "resultCode": 100,
+      "reasonCode": "success.complete",
+      "testUrl": "https://test-manager.lambdatest.com/projects/01M843ABM4C5EK249BW1SSWQDA/test-cases/01M85Y700XV8F171WGA0CSTATV/dashboard/share/US_2C1JMZKVYL9ASC6YPZBS32IC1ZNP564ZX5UB8L3NW8UV2X9S83OTZCR3DU2P2D1A?type=summary&agentView=true&fqdn=summary-page",
+      "sessionDir": "C:\\Users\\<user>/.testmuai/kaneai/sessions\\912fb819-03ac-4055-9476-79c65e49a590",
+      "summary": "Applied the SAVE10 promo code on the checkout page.\nThe discount was applied successfully, and the order total updated to $90.00.",
+      "oneLiner": "applied the SAVE10 promo code on the checkout page",
+      "creditsConsumed": 12.8341885,
+      "rawRunEnd": {
+        "type": "run_end",
+        "status": "passed",
+        "summary": "Applied the SAVE10 promo code on the checkout page.\nThe discount was applied successfully, and the order total updated to $90.00.",
+        "one_liner": "applied the SAVE10 promo code on the checkout page",
+        "final_state": {
+          "url": "http://127.0.0.1:4181/",
+          "order_total": "$90.00"
+        },
+        "reason": "Objective completed",
+        "duration": 30.6,
+        "bifurcated": false,
+        "total_runs": 1,
+        "context": {
+          "memory": {
+            "order_total_check": {
+              "extracted_value": "$90.00",
+              "operator": "equals",
+              "transforms": [
+                "strip"
+              ],
+              "json_path": null,
+              "reasoning": "value: '$90.00' -> '$90.00' after ['strip']; equals '$90.00' -> PASS",
+              "analyzer_type": "textual_visual",
+              "step": 6,
+              "query": "the order total amount in the checkout summary",
+              "condition": "The order total is exactly $90.00.",
+              "human_description": "Reading the order total from the checkout summary",
+              "expected_value": "$90.00",
+              "code_js": "el(8).innerText.trim()",
+              "wrapped_js": "(els) => {\n  const __m = {8: 0};\n  const el = (i) => els[__m[i]];\n  const __v = (el(8).innerText.trim());\n  return (typeof __v === 'boolean' ? String(__v) : __v);\n}",
+              "locators": [
+                "internal:text=\"$90.00\"i"
+              ],
+              "needs_unit_conversion": false
+            }
+          },
+          "variables": {
+            "order_total_check": {
+              "syntax": "{{order_total_check}}",
+              "value": "$90.00",
+              "type": "memory",
+              "secret": false
+            }
+          },
+          "pointer": "(passed) applied the SAVE10 promo code on the checkout page"
+        },
+        "credits_consumed": 12.8341885,
+        "session_dir": "C:\\Users\\<user>/.testmuai/kaneai/sessions\\912fb819-03ac-4055-9476-79c65e49a590",
+        "run_dir": "C:\\Users\\<user>/.testmuai/kaneai/sessions\\912fb819-03ac-4055-9476-79c65e49a590\\runs\\0",
+        "result_code": 100,
+        "reason_code": "success.complete",
+        "per_flow_metadata": [
+          {
+            "result_code": "100",
+            "reason_code": "success.complete",
+            "error_message": null,
+            "summary": "Applied the SAVE10 promo code on the checkout page.\nThe discount was applied successfully, and the order total updated to $90.00.",
+            "one_liner": "applied the SAVE10 promo code on the checkout page",
+            "credits_consumed": 12.8341885
+          }
+        ],
+        "run_id": "run-0",
+        "test_url": "https://test-manager.lambdatest.com/projects/01M843ABM4C5EK249BW1SSWQDA/test-cases/01M85Y700XV8F171WGA0CSTATV/dashboard/share/US_2C1JMZKVYL9ASC6YPZBS32IC1ZNP564ZX5UB8L3NW8UV2X9S83OTZCR3DU2P2D1A?type=summary&agentView=true&fqdn=summary-page",
+        "coverage": {
+          "status": "skipped"
+        },
+        "v": 1,
+        "ts": "2026-11-24T04:50:30.078Z"
+      },
+      "stdoutTail": " 1\",\"v\":1,\"ts\":\"2026-11-24T04:49:49.214Z\"}\n{\"step\":2,\"status\":\"done\",\"remark\":\"navigate: Navigate to http://127.0.0.1:4181\",\"v\":1,\"ts\":\"2026-11-24T04:49:49.223Z\"}\n{\"step\":3,\"status\":\"running\",\"remark\":\"Step 2\",\"v\":1,\"ts\":\"2026-11-24T04:49:53.417Z\"}\n{\"step\":3,\"status\":\"done\",\"remark\":\"wait: queued plan (2 steps): type \\\"Promo code\\\"; click \\\"Apply\\\"\",\"v\":1,\"ts\":\"2026-11-24T04:49:57.616Z\"}\n{\"step\":4,\"status\":\"running\",\"remark\":\"Step 3\",\"v\":1,\"ts\":\"2026-11-24T04:49:58.218Z\"}\n{\"step\":4,\"status\":\"done\",\"remark\":\"type: Type \\\"SAVE10\\\" into \\\"Promo code\\\"\",\"v\":1,\"ts\":\"2026-11-24T04:49:58.417Z\"}\n{\"step\":5,\"status\":\"running\",\"remark\":\"Step 4\",\"v\":1,\"ts\":\"2026-11-24T04:49:59.038Z\"}\n{\"step\":5,\"status\":\"done\",\"remark\":\"\",\"v\":1,\"ts\":\"2026-11-24T04:49:59.356Z\"}\n{\"step\":6,\"status\":\"running\",\"remark\":\"Step 5\",\"v\":1,\"ts\":\"2026-11-24T04:50:00.027Z\"}\n{\"step\":6,\"status\":\"done\",\"remark\":\"click: Clicking Apply to apply the promo code\",\"v\":1,\"ts\":\"2026-11-24T04:50:04.530Z\"}\n{\"step\":7,\"status\":\"running\",\"remark\":\"Step 6\",\"v\":1,\"ts\":\"2026-11-24T04:50:05.116Z\"}\n{\"step\":7,\"status\":\"done\",\"remark\":\"analyze: The order total is exactly $90.00.\",\"v\":1,\"ts\":\"2026-11-24T04:50:13.518Z\"}\n{\"step\":8,\"status\":\"running\",\"remark\":\"Step 7\",\"v\":1,\"ts\":\"2026-11-24T04:50:14.111Z\"}\n{\"step\":8,\"status\":\"done\",\"remark\":\"assert: After the discount appears, the order total must be exactly $90.00. Fail if the \",\"v\":1,\"ts\":\"2026-11-24T04:50:14.125Z\"}\n{\"type\":\"coverage\",\"status\":\"skipped\",\"reason\":\"not_assurance_project\",\"pack\":\"C:\\\\Users\\\\<user>\\\\.testmuai\\\\kaneai\\\\sessions\\\\912fb819-03ac-4055-9476-79c65e49a590\\\\evidence\\\\7adc75a0-bd29-445d-8290-06d16d55f64e.evidence\",\"v\":1,\"ts\":\"2026-11-24T04:50:30.077Z\"}\n{\"type\":\"run_end\",\"status\":\"passed\",\"summary\":\"Applied the SAVE10 promo code on the checkout page.\\nThe discount was applied successfully, and the order total updated to $90.00.\",\"one_liner\":\"applied the SAVE10 promo code on the checkout page\",\"final_state\":{\"url\":\"http://127.0.0.1:4181/\",\"order_total\":\"$90.00\"},\"reason\":\"Objective completed\",\"duration\":30.6,\"bifurcated\":false,\"total_runs\":1,\"context\":{\"memory\":{\"order_total_check\":{\"extracted_value\":\"$90.00\",\"operator\":\"equals\",\"transforms\":[\"strip\"],\"json_path\":null,\"reasoning\":\"value: '$90.00' -> '$90.00' after ['strip']; equals '$90.00' -> PASS\",\"analyzer_type\":\"textual_visual\",\"step\":6,\"query\":\"the order total amount in the checkout summary\",\"condition\":\"The order total is exactly $90.00.\",\"human_description\":\"Reading the order total from the checkout summary\",\"expected_value\":\"$90.00\",\"code_js\":\"el(8).innerText.trim()\",\"wrapped_js\":\"(els) => {\\n  const __m = {8: 0};\\n  const el = (i) => els[__m[i]];\\n  const __v = (el(8).innerText.trim());\\n  return (typeof __v === 'boolean' ? String(__v) : __v);\\n}\",\"locators\":[\"internal:text=\\\"$90.00\\\"i\"],\"needs_unit_conversion\":false}},\"variables\":{\"order_total_check\":{\"syntax\":\"{{order_total_check}}\",\"value\":\"$90.00\",\"type\":\"memory\",\"secret\":false}},\"pointer\":\"(passed) applied the SAVE10 promo code on the checkout page\"},\"credits_consumed\":12.8341885,\"session_dir\":\"C:\\\\Users\\\\<user>/.testmuai/kaneai/sessions\\\\912fb819-03ac-4055-9476-79c65e49a590\",\"run_dir\":\"C:\\\\Users\\\\<user>/.testmuai/kaneai/sessions\\\\912fb819-03ac-4055-9476-79c65e49a590\\\\runs\\\\0\",\"result_code\":100,\"reason_code\":\"success.complete\",\"per_flow_metadata\":[{\"result_code\":\"100\",\"reason_code\":\"success.complete\",\"error_message\":null,\"summary\":\"Applied the SAVE10 promo code on the checkout page.\\nThe discount was applied successfully, and the order total updated to $90.00.\",\"one_liner\":\"applied the SAVE10 promo code on the checkout page\",\"credits_consumed\":12.8341885}],\"run_id\":\"run-0\",\"test_url\":\"https://test-manager.lambdatest.com/projects/01M843ABM4C5EK249BW1SSWQDA/test-cases/01M85Y700XV8F171WGA0CSTATV/dashboard/share/US_2C1JMZKVYL9ASC6YPZBS32IC1ZNP564ZX5UB8L3NW8UV2X9S83OTZCR3DU2P2D1A?type=summary&agentView=true&fqdn=summary-page\",\"coverage\":{\"status\":\"skipped\"},\"v\":1,\"ts\":\"2026-11-24T04:50:30.078Z\"}\n",
+      "stderrTail": "Skill update available: not installed → 0.1.4 — run `kane-cli install skill`\n\nRunning on: Desktop · Chrome\nevidence: view locally with `kane-cli evidence serve C:\\Users\\<user>\\.testmuai\\kaneai\\sessions\\912fb819-03ac-4055-9476-79c65e49a590\\evidence\\7adc75a0-bd29-445d-8290-06d16d55f64e.evidence`\n",
+      "exitCode": 0,
+      "attemptHistory": [
+        {
+          "name": "checkout-total",
+          "objective": "On the checkout page, type SAVE10 into the promo code field and click Apply. After the discount appears, the order total must be exactly $90.00. Fail if the order total shows $100.00 or any amount other than $90.00.",
+          "url": "http://127.0.0.1:4181",
+          "attempt": 1,
+          "passed": false,
+          "kaneVerified": false,
+          "verificationSource": "kane_run_end",
+          "trust": "kane_verified_fail",
+          "trustReason": "Kane run_end reported status=failed; BugBoing treats this as not green.",
+          "status": "failed",
+          "reason": "Final verification failed: \"After the discount appears, the order total must be exactly $90.00. Fail if the order total shows $100.00 or any amount other than $90.00.\"",
+          "resultCode": 740,
+          "reasonCode": "assertion_error.confirmed_product_bug",
+          "testUrl": "https://test-manager.lambdatest.com/projects/01M843ABM4C5EK249BW1SSWQDA/test-cases/01M85Y552RNQ0EMH854GHHB7A0/dashboard/share/US_4QJAXM4ATZWJ2ZUWX0VYPE0LUTG5XPB8W1J4QXQJHMK3FHFEWG8VDZNCO2PYJVZL?type=summary&agentView=true&fqdn=summary-page",
+          "sessionDir": "C:\\Users\\<user>/.testmuai/kaneai/sessions\\7ecc626f-ec79-4268-ab23-1e272f95b552",
+          "summary": "The checkout recognizes the promo code and displays its discount, but does not subtract that discount from the final order total.\nFix the checkout total calculation so an accepted $10.00 SAVE10 discount reduces the $100.00 order total to $90.00.\nevidence: objective_contradiction: After the discount appears, the order total must be exactly $90.00. Fail if the order total shows $100.00 or any amount \nevidence: objective_contradiction: check FAILED: After the discount appears, the order total must be exactly $90.00. — expected: $90.00 | observed: {{order",
+          "oneLiner": "SAVE10 is shown as applied with a $10.00 discount, but the checkout total remains $100.00 instead of $90.00.",
+          "creditsConsumed": 21.340995,
+          "rawRunEnd": {
+            "type": "run_end",
+            "status": "failed",
+            "summary": "The checkout recognizes the promo code and displays its discount, but does not subtract that discount from the final order total.\nFix the checkout total calculation so an accepted $10.00 SAVE10 discount reduces the $100.00 order total to $90.00.\nevidence: objective_contradiction: After the discount appears, the order total must be exactly $90.00. Fail if the order total shows $100.00 or any amount \nevidence: objective_contradiction: check FAILED: After the discount appears, the order total must be exactly $90.00. — expected: $90.00 | observed: {{order",
+            "one_liner": "SAVE10 is shown as applied with a $10.00 discount, but the checkout total remains $100.00 instead of $90.00.",
+            "final_state": {},
+            "reason": "Final verification failed: \"After the discount appears, the order total must be exactly $90.00. Fail if the order total shows $100.00 or any amount other than $90.00.\"",
+            "duration": 42.1,
+            "bifurcated": false,
+            "total_runs": 1,
+            "context": {
+              "memory": {
+                "order_total_check": {
+                  "extracted_value": "$100.00",
+                  "operator": "equals",
+                  "transforms": [
+                    "strip"
+                  ],
+                  "json_path": null,
+                  "reasoning": "value: '$100.00' -> '$100.00' after ['strip']; equals '$90.00' -> FAIL",
+                  "analyzer_type": "textual_visual",
+                  "step": 6,
+                  "query": "the order total amount in the checkout summary",
+                  "condition": "After the discount appears, the order total must be exactly $90.00.",
+                  "human_description": "Reading the order total from the checkout summary",
+                  "expected_value": "$90.00",
+                  "code_js": "el(8).innerText.trim()",
+                  "wrapped_js": "(els) => {\n  const __m = {8: 0};\n  const el = (i) => els[__m[i]];\n  const __v = (el(8).innerText.trim());\n  return (typeof __v === 'boolean' ? String(__v) : __v);\n}",
+                  "locators": [
+                    "#total"
+                  ],
+                  "needs_unit_conversion": false
+                }
+              },
+              "variables": {
+                "order_total_check": {
+                  "syntax": "{{order_total_check}}",
+                  "value": "$100.00",
+                  "type": "memory",
+                  "secret": false
+                }
+              },
+              "pointer": "(failed) SAVE10 is shown as applied with a $10.00 discount, but the checkout total remains $100.00 instead of $90.00."
+            },
+            "credits_consumed": 21.340995,
+            "session_dir": "C:\\Users\\<user>/.testmuai/kaneai/sessions\\7ecc626f-ec79-4268-ab23-1e272f95b552",
+            "run_dir": "C:\\Users\\<user>/.testmuai/kaneai/sessions\\7ecc626f-ec79-4268-ab23-1e272f95b552\\runs\\0",
+            "result_code": 740,
+            "reason_code": "assertion_error.confirmed_product_bug",
+            "per_flow_metadata": [
+              {
+                "result_code": "740",
+                "reason_code": "assertion_error.confirmed_product_bug",
+                "error_message": "Final verification failed: \"After the discount appears, the order total must be exactly $90.00. Fail if the order total shows $100.00 or any amount other than $90.00.\"",
+                "summary": "The checkout recognizes the promo code and displays its discount, but does not subtract that discount from the final order total.\nFix the checkout total calculation so an accepted $10.00 SAVE10 discount reduces the $100.00 order total to $90.00.\nevidence: objective_contradiction: After the discount appears, the order total must be exactly $90.00. Fail if the order total shows $100.00 or any amount \nevidence: objective_contradiction: check FAILED: After the discount appears, the order total must be exactly $90.00. — expected: $90.00 | observed: {{order",
+                "one_liner": "SAVE10 is shown as applied with a $10.00 discount, but the checkout total remains $100.00 instead of $90.00.",
+                "credits_consumed": 21.340995
+              }
+            ],
+            "run_id": "run-0",
+            "verdict": {
+              "confirmed": true,
+              "status": "failed",
+              "family": "application_issue",
+              "category": "functional_defect",
+              "category_proposal": "",
+              "severity": "major",
+              "root_cause": "The checkout recognizes the promo code and displays its discount, but does not subtract that discount from the final order total.",
+              "agent_fault_assessment": "The agent followed the required flow: it entered SAVE10 in the Promo code field and clicked Apply. The resulting screen confirms that the promo was applied, so the failed total was not caused by a wrong field, wrong button, or premature assertion.",
+              "bug_title": "Applied SAVE10 promo leaves order total unchanged",
+              "signals": [
+                {
+                  "step": "0-7",
+                  "kind": "objective_contradiction",
+                  "excerpt": "After the discount appears, the order total must be exactly $90.00. Fail if the order total shows $100.00 or any amount other than $90.00."
+                },
+                {
+                  "step": "0-7",
+                  "kind": "objective_contradiction",
+                  "excerpt": "check FAILED: After the discount appears, the order total must be exactly $90.00. — expected: $90.00 | observed: {{order_total_check}}"
+                }
+              ],
+              "confidence": 0.99,
+              "suggestion": "Fix the checkout total calculation so an accepted $10.00 SAVE10 discount reduces the $100.00 order total to $90.00.",
+              "one_liner": "SAVE10 is shown as applied with a $10.00 discount, but the checkout total remains $100.00 instead of $90.00.",
+              "relevant_steps": [
+                3,
+                5,
+                7
+              ],
+              "culprit_step": "0-7",
+              "credits_consumed": 3.91245,
+              "known_bug_id": "",
+              "category_name": "",
+              "mode": "terminal"
+            },
+            "test_url": "https://test-manager.lambdatest.com/projects/01M843ABM4C5EK249BW1SSWQDA/test-cases/01M85Y552RNQ0EMH854GHHB7A0/dashboard/share/US_4QJAXM4ATZWJ2ZUWX0VYPE0LUTG5XPB8W1J4QXQJHMK3FHFEWG8VDZNCO2PYJVZL?type=summary&agentView=true&fqdn=summary-page",
+            "coverage": {
+              "status": "skipped"
+            },
+            "v": 1,
+            "ts": "2026-11-24T04:49:33.384Z"
+          },
+          "verdict": {
+            "confirmed": true,
+            "status": "failed",
+            "family": "application_issue",
+            "category": "functional_defect",
+            "category_proposal": "",
+            "severity": "major",
+            "root_cause": "The checkout recognizes the promo code and displays its discount, but does not subtract that discount from the final order total.",
+            "agent_fault_assessment": "The agent followed the required flow: it entered SAVE10 in the Promo code field and clicked Apply. The resulting screen confirms that the promo was applied, so the failed total was not caused by a wrong field, wrong button, or premature assertion.",
+            "bug_title": "Applied SAVE10 promo leaves order total unchanged",
+            "signals": [
+              {
+                "step": "0-7",
+                "kind": "objective_contradiction",
+                "excerpt": "After the discount appears, the order total must be exactly $90.00. Fail if the order total shows $100.00 or any amount other than $90.00."
+              },
+              {
+                "step": "0-7",
+                "kind": "objective_contradiction",
+                "excerpt": "check FAILED: After the discount appears, the order total must be exactly $90.00. — expected: $90.00 | observed: {{order_total_check}}"
+              }
+            ],
+            "confidence": 0.99,
+            "suggestion": "Fix the checkout total calculation so an accepted $10.00 SAVE10 discount reduces the $100.00 order total to $90.00.",
+            "one_liner": "SAVE10 is shown as applied with a $10.00 discount, but the checkout total remains $100.00 instead of $90.00.",
+            "relevant_steps": [
+              3,
+              5,
+              7
+            ],
+            "culprit_step": "0-7",
+            "credits_consumed": 3.91245,
+            "known_bug_id": "",
+            "category_name": "",
+            "mode": "terminal"
+          },
+          "repair": {
+            "suggestion": "Fix the checkout total calculation so an accepted $10.00 SAVE10 discount reduces the $100.00 order total to $90.00.",
+            "culpritStep": "0-7",
+            "rootCause": "The checkout recognizes the promo code and displays its discount, but does not subtract that discount from the final order total.",
+            "bugTitle": "Applied SAVE10 promo leaves order total unchanged",
+            "category": "functional_defect",
+            "severity": "major"
+          },
+          "stdoutTail": ":null,\"reasoning\":\"value: '$100.00' -> '$100.00' after ['strip']; equals '$90.00' -> FAIL\",\"analyzer_type\":\"textual_visual\",\"step\":6,\"query\":\"the order total amount in the checkout summary\",\"condition\":\"After the discount appears, the order total must be exactly $90.00.\",\"human_description\":\"Reading the order total from the checkout summary\",\"expected_value\":\"$90.00\",\"code_js\":\"el(8).innerText.trim()\",\"wrapped_js\":\"(els) => {\\n  const __m = {8: 0};\\n  const el = (i) => els[__m[i]];\\n  const __v = (el(8).innerText.trim());\\n  return (typeof __v === 'boolean' ? String(__v) : __v);\\n}\",\"locators\":[\"#total\"],\"needs_unit_conversion\":false}},\"variables\":{\"order_total_check\":{\"syntax\":\"{{order_total_check}}\",\"value\":\"$100.00\",\"type\":\"memory\",\"secret\":false}},\"pointer\":\"(failed) SAVE10 is shown as applied with a $10.00 discount, but the checkout total remains $100.00 instead of $90.00.\"},\"credits_consumed\":21.340995,\"session_dir\":\"C:\\\\Users\\\\<user>/.testmuai/kaneai/sessions\\\\7ecc626f-ec79-4268-ab23-1e272f95b552\",\"run_dir\":\"C:\\\\Users\\\\<user>/.testmuai/kaneai/sessions\\\\7ecc626f-ec79-4268-ab23-1e272f95b552\\\\runs\\\\0\",\"result_code\":740,\"reason_code\":\"assertion_error.confirmed_product_bug\",\"per_flow_metadata\":[{\"result_code\":\"740\",\"reason_code\":\"assertion_error.confirmed_product_bug\",\"error_message\":\"Final verification failed: \\\"After the discount appears, the order total must be exactly $90.00. Fail if the order total shows $100.00 or any amount other than $90.00.\\\"\",\"summary\":\"The checkout recognizes the promo code and displays its discount, but does not subtract that discount from the final order total.\\nFix the checkout total calculation so an accepted $10.00 SAVE10 discount reduces the $100.00 order total to $90.00.\\nevidence: objective_contradiction: After the discount appears, the order total must be exactly $90.00. Fail if the order total shows $100.00 or any amount \\nevidence: objective_contradiction: check FAILED: After the discount appears, the order total must be exactly $90.00. — expected: $90.00 | observed: {{order\",\"one_liner\":\"SAVE10 is shown as applied with a $10.00 discount, but the checkout total remains $100.00 instead of $90.00.\",\"credits_consumed\":21.340995}],\"run_id\":\"run-0\",\"verdict\":{\"confirmed\":true,\"status\":\"failed\",\"family\":\"application_issue\",\"category\":\"functional_defect\",\"category_proposal\":\"\",\"severity\":\"major\",\"root_cause\":\"The checkout recognizes the promo code and displays its discount, but does not subtract that discount from the final order total.\",\"agent_fault_assessment\":\"The agent followed the required flow: it entered SAVE10 in the Promo code field and clicked Apply. The resulting screen confirms that the promo was applied, so the failed total was not caused by a wrong field, wrong button, or premature assertion.\",\"bug_title\":\"Applied SAVE10 promo leaves order total unchanged\",\"signals\":[{\"step\":\"0-7\",\"kind\":\"objective_contradiction\",\"excerpt\":\"After the discount appears, the order total must be exactly $90.00. Fail if the order total shows $100.00 or any amount other than $90.00.\"},{\"step\":\"0-7\",\"kind\":\"objective_contradiction\",\"excerpt\":\"check FAILED: After the discount appears, the order total must be exactly $90.00. — expected: $90.00 | observed: {{order_total_check}}\"}],\"confidence\":0.99,\"suggestion\":\"Fix the checkout total calculation so an accepted $10.00 SAVE10 discount reduces the $100.00 order total to $90.00.\",\"one_liner\":\"SAVE10 is shown as applied with a $10.00 discount, but the checkout total remains $100.00 instead of $90.00.\",\"relevant_steps\":[3,5,7],\"culprit_step\":\"0-7\",\"credits_consumed\":3.91245,\"known_bug_id\":\"\",\"category_name\":\"\",\"mode\":\"terminal\"},\"test_url\":\"https://test-manager.lambdatest.com/projects/01M843ABM4C5EK249BW1SSWQDA/test-cases/01M85Y552RNQ0EMH854GHHB7A0/dashboard/share/US_4QJAXM4ATZWJ2ZUWX0VYPE0LUTG5XPB8W1J4QXQJHMK3FHFEWG8VDZNCO2PYJVZL?type=summary&agentView=true&fqdn=summary-page\",\"coverage\":{\"status\":\"skipped\"},\"v\":1,\"ts\":\"2026-11-24T04:49:33.384Z\"}\n",
+          "stderrTail": "Skill update available: not installed → 0.1.4 — run `kane-cli install skill`\n\nRunning on: Desktop · Chrome\nevidence: view locally with `kane-cli evidence serve C:\\Users\\<user>\\.testmuai\\kaneai\\sessions\\7ecc626f-ec79-4268-ab23-1e272f95b552\\evidence\\38e21754-7158-402a-a503-164a50b657da.evidence`\n",
+          "exitCode": 1,
+          "fixCmd": "node \"E:\\Hackathon\\BugBoing\\examples\\checkout-bug\\fix-total.mjs\"",
+          "fixExitCode": 0,
+          "fixStdoutTail": "[checkout-fix] check=checkout-total trust=kane_verified_fail\n[checkout-fix] family=application_issue confirmed=true\n[checkout-fix] suggestion=Fix the checkout total calculation so an accepted $10.00 SAVE10 discount reduces the $100.00 order total to $90.00.\n[checkout-fix] patched examples\\checkout-bug\\site\\app.js (total = subtotal - discount)\n",
+          "fixStderrTail": "",
+          "fixDecision": {
+            "invoked": true,
+            "reason": "Kane confirmed an application issue."
+          },
+          "scope": {
+            "enforced": true,
+            "allowed": [
+              "examples/checkout-bug/run-output.txt",
+              "examples/checkout-bug/site/**"
+            ],
+            "violations": []
+          }
+        }
+      ]
+    }
+  ]
+}

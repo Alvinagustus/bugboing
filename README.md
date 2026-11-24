@@ -102,7 +102,7 @@ This resets the demo fixture, starts a local server, runs BugBoing with a generi
 
 Expected: attempt 1 fails because Kane catches `BugBoing Demoo` != `BugBoing Demo`, the fixer consumes the failure JSON from stdin and patches `demo/index.html`, attempt 2 passes only after Kane `run_end` reports `passed`.
 
-A **real agent** version of the same loop is committed in [`examples/real-agent-loop/`](./examples/real-agent-loop/): OpenCode CLI receives Kane's failure payload, reads and edits `app.js` with tools, and a fresh Kane run decides the outcome.
+A **real agent** version of the same loop is committed in [`examples/real-agent-loop/`](./examples/real-agent-loop/): OpenCode CLI receives Kane's failure payload, reads and edits `app.js` with tools, and a fresh Kane run decides the outcome. A **business-logic** example is in [`examples/checkout-bug/`](./examples/checkout-bug/): the promo code appears applied, but the order total still charges the full price until Kane verifies the `$90.00` fix.
 
 Manual run:
 
@@ -202,6 +202,7 @@ Exit codes:
 
 - `demo/report.json` - real Kane golden-path report (fail → fix → pass). It was captured before the gating/scope work, so it is `v0.2.0` and has `contract`, `trust`, `kaneVerified`, `verificationSource`, `rawRunEnd`; current reports are `v0.3.0` and add `credits`, `verdict`, `fixDecision`, and `scope`.
 - `examples/real-agent-loop/` - real OpenCode CLI loop: Kane `740` → agent uses `glob`/`read`/`edit` → Kane `100`; includes the report, JSONL tool transcript, diff, and full run output.
+- `examples/checkout-bug/` - a more meaningful business-logic defect: the checkout shows a SAVE10 discount row but charges $100.00 instead of $90.00. Kane caught it as `functional_defect`/`major`, a deterministic fixer changed the total, and a fresh Kane run passed.
 - `tests/contract.test.ts` - contract tests proving: pass is green only on Kane `run_end` pass; exit `0` without `run_end` is NOT green; missing/unparseable/non-`run_end` verdict is NOT green.
 - `tests/loop.test.ts` - loop test proving fixer is invoked, Kane reruns, and green happens only after a Kane `run_end` pass.
 - `tests/gating.test.ts` - verdict gating (`confirmed` + `application_issue`), repair-packet payload, and `--max-credits`; the refusal cases assert the fixer did **not** run.
