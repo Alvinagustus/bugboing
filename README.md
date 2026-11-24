@@ -234,13 +234,6 @@ npm test
 - **Operational dependency.** Requires Kane CLI/TestMu AI availability and credits. Windows PowerShell script policy may require `.cmd` wrappers.
 - **Cut for scope.** No parallel checks, MCP server, HTML dashboard, or 0-credit replay regression guard (investigated as a possible gap; not shipped).
 
-## Next Steps (not shipped)
-
-- **More agent templates.** Polish copy-paste `--fix-cmd` templates for more agent CLIs (Claude/Codex/Gemini), building on the existing OpenCode/Hermes cookbook loops.
-- **CI integration.** GitHub Action that runs BugBoing checks and posts a Kane-verified pass/fail report on PRs.
-- **Regression guard research.** Investigate whether 0-credit Kane evidence verdict/policy can be used as a regression guard — only if verified with real evidence.
-- **MCP server mode.** Expose BugBoing as an MCP server for agent-native integration.
-
 ## License
 
 MIT. See [`LICENSE`](./LICENSE).
