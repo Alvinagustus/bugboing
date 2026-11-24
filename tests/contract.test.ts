@@ -52,7 +52,7 @@ test("strict contract: run_end failed => red", () => {
 
 test("strict contract: exit 0 without run_end is NOT green", () => {
   const { r, reportObj } = run("no_run_end_exit0");
-  assert.equal(r.status, 1);
+  assert.equal(r.status, 2);
   assert.equal(reportObj.passed, false);
   assert.equal(reportObj.checks[0].kaneVerified, false);
   assert.equal(reportObj.checks[0].verificationSource, "none");
@@ -62,7 +62,7 @@ test("strict contract: exit 0 without run_end is NOT green", () => {
 
 test("strict contract: exit 1 without run_end is unverified", () => {
   const { r, reportObj } = run("no_run_end_exit1");
-  assert.equal(r.status, 1);
+  assert.equal(r.status, 2);
   assert.equal(reportObj.passed, false);
   assert.equal(reportObj.checks[0].status, "unverified");
   assert.equal(reportObj.checks[0].trust, "unverified_missing_run_end");
@@ -71,7 +71,7 @@ test("strict contract: exit 1 without run_end is unverified", () => {
 
 test("strict contract: non-run_end event with status=passed is NOT green", () => {
   const { r, reportObj } = run("coverage_pass_no_run_end");
-  assert.equal(r.status, 1);
+  assert.equal(r.status, 2);
   assert.equal(reportObj.passed, false);
   assert.equal(reportObj.checks[0].kaneVerified, false);
   assert.equal(reportObj.checks[0].verificationSource, "none");

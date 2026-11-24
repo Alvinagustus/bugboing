@@ -25,7 +25,7 @@ test("timeout kills the whole Kane process tree instead of hanging", () => {
   ], { cwd, encoding: "utf8", timeout: 30000 });
 
   const elapsed = Date.now() - started;
-  assert.equal(r.status, 1, r.stderr + "\n" + r.stdout);
+  assert.equal(r.status, 2, r.stderr + "\n" + r.stdout);
   assert.ok(elapsed < 20000, `runner should not hang (took ${elapsed}ms)`);
 
   const reportObj = JSON.parse(readFileSync(report, "utf8"));

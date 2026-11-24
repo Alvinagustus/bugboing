@@ -61,6 +61,10 @@ agent the check, the objective, and Kane's verdict. The agent decides what to ed
 
 - One fixture and one loop. This is evidence that agent ↔ Kane communication works,
   not a benchmark of agent quality.
+- The recorded artifacts predate the verdict gate (`verdict.confirmed` +
+  `family=application_issue`) and the scope guard. The recorded verdict satisfies
+  that gate, and the recorded change is inside the committed `fixPaths`, but the
+  artifacts themselves were produced by the earlier build.
 - The bug is a real DOM/runtime mismatch, but it is still a demo bug chosen for
   determinism.
 - `run.mjs` resets the fixture with `git checkout`; the committed site stays buggy.

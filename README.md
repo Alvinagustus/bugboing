@@ -15,8 +15,11 @@ AI coding agents can edit code fast, but they often miss the last mile: *did the
 
 1. **Run** - BugBoing executes checks via `kane-cli run ... --headless --agent`.
 2. **Catch** - It parses Kane NDJSON `run_end` for status, reason/result codes, evidence, and Test Manager link.
-3. **Boing** - On failure, it invokes `--fix-cmd` and passes a structured failure payload on stdin (JSON), including `kaneVerified`, `verificationSource`, and `rawRunEnd`.
-4. **Verify** - It reruns the same Kane check. Only a Kane `run_end` with `status:"passed"` becomes green. Missing/unparseable `run_end` becomes `unverified` — never green.
+3. **Boing** - On a **Kane-confirmed application issue** (`verdict.confirmed == true` and `verdict.family == "application_issue"`), it invokes `--fix-cmd` with a structured failure payload on stdin (JSON): the repair packet (`suggestion`, `culpritStep`, `rootCause`), the scope contract, and the raw `run_end`.
+4. **Guard** - After the fixer exits, every edit outside the allowed paths is reported and, by default, reverted before the next Kane run. `checks.json` is always protected.
+5. **Verify** - It reruns the same Kane check. Only a Kane `run_end` with `status:"passed"` becomes green. Missing/unparseable `run_end` becomes `unverified` — never green.
+
+Infrastructure noise is not a bug: unconfirmed verdicts, non-application families, and runs with no verdict never reach the fixer, and `--max-credits` stops the loop before spending credits it was not authorized to spend.
 
 ```text
 checks.json ──> BugBoing ──> kane-cli run (--headless --agent)
@@ -51,6 +54,8 @@ This is the core of BugBoing. The loop pattern is crowded; the strict verdict co
 | Kane `run_end.status != "passed"` | **NOT GREEN** | Real Kane failure |
 | Fixer exits `0`, but no Kane pass | **NOT GREEN** | Fixer exit code is not proof |
 | Missing / unparseable `run_end` | **UNVERIFIED / NOT GREEN** | No verdict, no trust |
+| `verdict.confirmed != true` or `family != "application_issue"` | **NOT GREEN, fixer not run** | Infra/auth/unconfirmed noise is not an app bug to patch |
+| Fixer edits outside `--allow-fix` | **edits reverted, then rerun** | The fix contract is scoped; `checks.json` is protected |
 
 The report makes this machine-visible:
 
@@ -114,10 +119,13 @@ node dist/cli.js verify --checks demo/checks.json --fix-cmd "node demo/fix-gener
     "url": "http://127.0.0.1:4173",
     "objective": "Assert the h1 heading text is exactly 'BugBoing Demo'. Fail if the heading is different.",
     "timeoutSeconds": 120,
-    "maxSteps": 50
+    "maxSteps": 50,
+    "fixPaths": ["demo/index.html"]
   }
 ]
 ```
+
+`fixPaths` (optional) narrows the scope guard for that check; paths are relative to the directory BugBoing runs in. When neither `fixPaths` nor `--allow-fix` is set, BugBoing allows the checks file's directory (or the whole workspace when the checks file sits at the root), and says so in the log.
 
 ## Fixer Interface (agent-agnostic, not the novelty)
 
@@ -132,12 +140,22 @@ The stdin fixer interface is useful plumbing, not the headline. Similar agent-cm
   "check": { "name": "...", "url": "...", "objective": "..." },
   "attempt": 1,
   "maxAttempts": 2,
+  "scope": { "allowed": ["demo/**"], "checksFile": "demo/checks.json" },
+  "repair": {
+    "suggestion": "Fix the heading text and rerun the check.",
+    "culpritStep": "0-3",
+    "rootCause": "heading text mismatch",
+    "bugTitle": "Heading mismatch",
+    "category": "ui_data_defect",
+    "severity": "minor"
+  },
   "result": {
     "status": "failed",
     "reason": "...",
     "trust": "kane_verified_fail",
     "kaneVerified": false,
     "verificationSource": "kane_run_end",
+    "verdict": { "confirmed": true, "family": "application_issue" },
     "testUrl": "...",
     "rawRunEnd": { "...": "..." }
   }
@@ -160,23 +178,30 @@ Examples:
 ## CLI
 
 ```text
-bugboing verify --checks <checks.json> [--fix-cmd <cmd>] [--max-attempts <n>] [--report <file>] [--kane-cmd <cmd>] [--kane-timeout <s>]
+bugboing verify --checks <checks.json> [--fix-cmd <cmd>] [--max-attempts <n>] [--report <file>]
+                [--kane-cmd <cmd>] [--kane-timeout <s>] [--max-credits <n>]
+                [--allow-fix <globs>] [--scope-guard off|warn|revert]
 ```
 
-`--kane-timeout` is a hard kill deadline for the whole Kane process tree (default: the check's `timeoutSeconds` + 60s). On timeout the check is `unverified`, never green, and BugBoing exits `1` instead of hanging.
+- `--kane-timeout` is a hard kill deadline for the whole Kane process tree (default: the check's `timeoutSeconds` + 60s). On timeout the check is `unverified`, never green.
+- `--max-credits` stops before the next Kane run or fixer once that many credits have been consumed. The report records `credits.consumed`, `credits.limit`, and `credits.exhausted`.
+- `--allow-fix` is a comma-separated glob list the fixer may change (default: the checks file's directory). `check.fixPaths` adds per-check paths.
+- `--scope-guard` is `revert` (default), `warn`, or `off`. `revert` restores modified files, deletes files the fixer created outside scope, and restores deleted files. `checks.json` is always protected. This is a guardrail, not an OS sandbox.
 
 Exit codes:
 - `0` - all checks passed (after retries if any)
-- `1` - one or more checks failed after retries / no fix path / timed out
-- `2` - tool/config/runtime error
+- `1` - at least one Kane-verified failure (red), including after a fix attempt
+- `2` - BugBoing could not obtain a Kane verdict (missing `run_end`, timeout, credit budget), or a tool/config/runtime error
 
 ## Evidence
 
-- `demo/report.json` - real Kane golden-path report (fail → fix → pass), v0.2.0 schema with `contract`, `trust`, `kaneVerified`, `verificationSource`, and `rawRunEnd`.
+- `demo/report.json` - real Kane golden-path report (fail → fix → pass). It was captured before the gating/scope work, so it is `v0.2.0` and has `contract`, `trust`, `kaneVerified`, `verificationSource`, `rawRunEnd`; current reports are `v0.3.0` and add `credits`, `verdict`, `fixDecision`, and `scope`.
 - `examples/real-agent-loop/` - real OpenCode CLI loop: Kane `740` → agent uses `glob`/`read`/`edit` → Kane `100`; includes the report, JSONL tool transcript, diff, and full run output.
 - `tests/contract.test.ts` - contract tests proving: pass is green only on Kane `run_end` pass; exit `0` without `run_end` is NOT green; missing/unparseable/non-`run_end` verdict is NOT green.
 - `tests/loop.test.ts` - loop test proving fixer is invoked, Kane reruns, and green happens only after a Kane `run_end` pass.
-- `tests/timeout.test.ts` + `tests/proc.test.ts` - a check whose Kane command hangs (and ignores `SIGTERM`) is killed with its whole process tree; BugBoing exits `1` with `unverified_missing_run_end` instead of hanging on open pipes.
+- `tests/gating.test.ts` - verdict gating (`confirmed` + `application_issue`), repair-packet payload, and `--max-credits`; each asserts the fixer did **not** run when it should not.
+- `tests/scope.test.ts` - scope guard: allowed edits survive, out-of-scope edits are reverted or deleted, `checks.json` is restored, and `warn` mode reports without touching files.
+- `tests/timeout.test.ts` + `tests/proc.test.ts` - a check whose Kane command hangs (and ignores `SIGTERM`) is killed with its whole process tree; BugBoing exits `2` with `unverified_missing_run_end` instead of hanging on open pipes.
 - `demo/fix-generic.mjs` - deterministic payload-driven fixer demonstrating the stdin JSON interface (not a real agent; real agent CLIs can be plugged in via `--fix-cmd`).
 
 ## Tests
@@ -190,6 +215,7 @@ npm test
 - **Crowded pattern.** Fail→fix→rerun loops and stdin-driven agent commands already exist in the ecosystem. BugBoing does **not** claim novelty there.
 - **Narrow proof.** BugBoing's value is the strict, testable verdict contract: no Kane `run_end` pass = no green. That contract is enforced in code and covered by contract tests.
 - **Demo fixers are scoped.** The golden-path demo uses a deterministic payload-driven fixer for reliability. One real agent loop is committed in `examples/real-agent-loop/` (OpenCode CLI + Kane fail→fix→pass), but it is a single fixture, not a benchmark.
+- **Scope guard is best-effort.** It snapshots the workspace, compares hashes after the fixer, and restores out-of-scope changes. It skips `.git`, `node_modules`, `.next`, `.cache`, `.turbo`, and `.testmuai`, and it is not an OS-level sandbox; use `--allow-fix` and a disposable checkout for untrusted agents. The snapshot copies workspace files per fix attempt, so very large repos pay I/O cost.
 - **Kane objective quality matters.** Vague objectives may produce weak assertions.
 - **Operational dependency.** Requires Kane CLI/TestMu AI availability and credits. Windows PowerShell script policy may require `.cmd` wrappers.
 - **Cut for scope.** No parallel checks, MCP server, HTML dashboard, or 0-credit replay regression guard (investigated as a possible gap; not shipped).
