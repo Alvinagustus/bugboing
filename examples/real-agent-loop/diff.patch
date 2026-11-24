@@ -1,0 +1,14 @@
+diff --git a/examples/real-agent-loop/site/app.js b/examples/real-agent-loop/site/app.js
+index 025d7c9..5400c3d 100644
+--- a/examples/real-agent-loop/site/app.js
++++ b/examples/real-agent-loop/site/app.js
+@@ -1,7 +1,6 @@
+-// Deliberate bug for the real-agent loop: the runtime heading does not match
+-// the copy in index.html, so the bug is only visible after JavaScript runs.
++// The runtime heading must match the copy in index.html.
+ const headline = document.getElementById("headline");
+-headline.textContent = "BugBoing Demoo";
++headline.textContent = "BugBoing Demo";
+ 
+ document.getElementById("refresh").addEventListener("click", () => {
+   document.getElementById("status").textContent = "Refreshed at " + new Date().toLocaleTimeString();
