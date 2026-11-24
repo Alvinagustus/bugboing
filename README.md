@@ -75,7 +75,7 @@ The report makes this machine-visible:
 ### Install
 
 ```bash
-git clone <repo-url>
+git clone https://github.com/Alvinagustus/bugboing
 cd bugboing
 npm install
 ```
