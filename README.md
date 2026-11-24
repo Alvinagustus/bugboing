@@ -102,7 +102,12 @@ This resets the demo fixture, starts a local server, runs BugBoing with a generi
 
 Expected: attempt 1 fails because Kane catches `BugBoing Demoo` != `BugBoing Demo`, the fixer consumes the failure JSON from stdin and patches `demo/index.html`, attempt 2 passes only after Kane `run_end` reports `passed`.
 
-A **real agent** version of the same loop is committed in [`examples/real-agent-loop/`](./examples/real-agent-loop/): OpenCode CLI receives Kane's failure payload, reads and edits `app.js` with tools, and a fresh Kane run decides the outcome. A **business-logic** example is in [`examples/checkout-bug/`](./examples/checkout-bug/): the promo code appears applied, but the order total still charges the full price until Kane verifies the `$90.00` fix. The same checkout defect is also verified against a **public GitHub Pages URL** in [`examples/checkout-public/`](./examples/checkout-public/), with public Kane Test Manager evidence links.
+**Real agent cookbook loops** (Kane fail → real coding agent → Kane rerun pass):
+- [`examples/real-agent-loop/`](./examples/real-agent-loop/) — runtime DOM heading bug, fixed by OpenCode CLI.
+- [`examples/inventory-filter/`](./examples/inventory-filter/) — "In stock only" filter state/logic bug, fixed by OpenCode (`iceman-free`).
+- [`examples/profile-save/`](./examples/profile-save/) — required-name validation bug, fixed by Hermes (Nous Portal, `meituan/longcat-2.5:free`).
+
+**Other evidence:** [`examples/checkout-bug/`](./examples/checkout-bug/) (business-logic checkout total, deterministic fixer) and [`examples/checkout-public/`](./examples/checkout-public/) (same checkout defect verified against a public GitHub Pages URL with public Kane Test Manager links).
 
 Manual run:
 
@@ -201,9 +206,11 @@ Exit codes:
 ## Evidence
 
 - `demo/report.json` - real Kane golden-path report (fail → fix → pass). It was captured before the gating/scope work, so it is `v0.2.0` and has `contract`, `trust`, `kaneVerified`, `verificationSource`, `rawRunEnd`; current reports are `v0.3.0` and add `credits`, `verdict`, `fixDecision`, and `scope`.
-- `examples/real-agent-loop/` - real OpenCode CLI loop: Kane `740` → agent uses `glob`/`read`/`edit` → Kane `100`; includes the report, JSONL tool transcript, diff, and full run output.
-- `examples/checkout-bug/` - a more meaningful business-logic defect: the checkout shows a SAVE10 discount row but charges $100.00 instead of $90.00. Kane caught it as `functional_defect`/`major`, a deterministic fixer changed the total, and a fresh Kane run passed.
-- `examples/checkout-public/` - the same checkout defect verified against a **public GitHub Pages URL** (`https://alvinagustus.github.io/bugboing/checkout-public/`), with public Kane Test Manager `test_url` evidence, a deploy-aware fixer, and a restored buggy fixture.
+- `examples/real-agent-loop/` - real OpenCode CLI loop: runtime heading bug, agent uses `glob`/`read`/`edit`, Kane reruns to pass.
+- `examples/inventory-filter/` - real OpenCode (`iceman-free`) loop: In stock only filter fails to hide out-of-stock items; agent fixes filter logic; Kane reruns to pass.
+- `examples/profile-save/` - real Hermes (Nous Portal, `meituan/longcat-2.5:free`) loop: empty required Name saved as "Saved!"; agent adds validation; Kane reruns to pass.
+- `examples/checkout-bug/` - business-logic defect: discount shown but total stays $100.00; Kane catches `functional_defect`/`major`; deterministic fixer; Kane reruns to pass.
+- `examples/checkout-public/` - same checkout defect verified against a **public GitHub Pages URL** (`https://alvinagustus.github.io/bugboing/checkout-public/`), with public Kane Test Manager `test_url` evidence.
 - `tests/contract.test.ts` - contract tests proving: pass is green only on Kane `run_end` pass; exit `0` without `run_end` is NOT green; missing/unparseable/non-`run_end` verdict is NOT green.
 - `tests/loop.test.ts` - loop test proving fixer is invoked, Kane reruns, and green happens only after a Kane `run_end` pass.
 - `tests/gating.test.ts` - verdict gating (`confirmed` + `application_issue`), repair-packet payload, and `--max-credits`; the refusal cases assert the fixer did **not** run.
@@ -221,7 +228,7 @@ npm test
 
 - **Crowded pattern.** Fail→fix→rerun loops and stdin-driven agent commands already exist in the ecosystem. BugBoing does **not** claim novelty there.
 - **Narrow proof.** BugBoing's value is the strict, testable verdict contract: no Kane `run_end` pass = no green. That contract is enforced in code and covered by contract tests.
-- **Demo fixers are scoped.** The golden-path demo uses a deterministic payload-driven fixer for reliability. One real agent loop is committed in `examples/real-agent-loop/` (OpenCode CLI + Kane fail→fix→pass), but it is a single fixture, not a benchmark.
+- **Demo fixers are scoped.** The golden-path demo uses a deterministic payload-driven fixer for reliability. Three real-agent cookbook loops are committed (`real-agent-loop`, `inventory-filter`, `profile-save`), each one fixture/one run — evidence that agent↔Kane communication works, not a benchmark of agent quality.
 - **Scope guard is best-effort.** It snapshots the workspace, compares hashes after the fixer, and restores out-of-scope changes. It skips `.git`, `node_modules`, `.next`, `.cache`, `.turbo`, and `.testmuai`, and it is not an OS-level sandbox; use `--allow-fix` and a disposable checkout for untrusted agents. The snapshot copies workspace files per fix attempt, so very large repos pay I/O cost.
 - **Kane objective quality matters.** Vague objectives may produce weak assertions.
 - **Operational dependency.** Requires Kane CLI/TestMu AI availability and credits. Windows PowerShell script policy may require `.cmd` wrappers.
