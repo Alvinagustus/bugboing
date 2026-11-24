@@ -117,21 +117,24 @@ function quoteWin(s: string): string {
   return '"' + s.replace(/"/g, '\\"') + '"';
 }
 
+function quotePosix(s: string): string {
+  if (/^[A-Za-z0-9_./:@%+=,-]+$/.test(s)) return s;
+  return "'" + s.replace(/'/g, "'\\''") + "'";
+}
+
+function quoteArg(s: string): string {
+  return process.platform === "win32" ? quoteWin(s) : quotePosix(s);
+}
+
 async function runCmd(cmd: string, args: string[], opts: { cwd?: string; input?: string; timeoutMs?: number } = {}): Promise<{ code: number | null; stdout: string; stderr: string }> {
   return await new Promise((resolve) => {
-    const useShell = process.platform === "win32";
-    const child = useShell
-      ? spawn([cmd, ...args.map(quoteWin)].join(" "), {
-          cwd: opts.cwd,
-          shell: true,
-          stdio: ["pipe", "pipe", "pipe"],
-          env: process.env,
-        })
-      : spawn(cmd, args, {
-          cwd: opts.cwd,
-          stdio: ["pipe", "pipe", "pipe"],
-          env: process.env,
-        });
+    const commandLine = [cmd, ...args.map(quoteArg)].join(" ");
+    const child = spawn(commandLine, {
+      cwd: opts.cwd,
+      shell: true,
+      stdio: ["pipe", "pipe", "pipe"],
+      env: process.env,
+    });
     let stdout = "";
     let stderr = "";
     let done = false;
@@ -164,7 +167,7 @@ function extractRunEnd(stdout: string): RunEnd | undefined {
     if (!t.startsWith("{") || !t.endsWith("}")) continue;
     try {
       const obj = JSON.parse(t) as RunEnd;
-      if (obj.type === "run_end" || (obj.status && ("result_code" in obj || "reason_code" in obj || "reason" in obj))) {
+      if (obj.type === "run_end") {
         found = obj;
       }
     } catch {}
