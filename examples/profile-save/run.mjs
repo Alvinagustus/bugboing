@@ -37,7 +37,7 @@ const log = createWriteStream(logFile, { flags: "w" });
 const args = [
   "dist/cli.js", "verify",
   "--checks", path.join(here, "checks.json"),
-  "--fix-cmd", `node "${path.join(here, "fix-with-opencode.mjs")}"`,
+  "--fix-cmd", `node "${path.join(here, "fix-with-hermes.mjs")}"`,
   "--max-attempts", "2",
   "--max-credits", process.env.MAX_CREDITS || "80",
   "--allow-fix", logRel,
