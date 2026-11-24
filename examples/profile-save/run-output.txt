@@ -1,0 +1,364 @@
+$ node dist/cli.js verify --checks E:\Hackathon\BugBoing\examples\profile-save\checks.json --fix-cmd node "E:\Hackathon\BugBoing\examples\profile-save\fix-with-hermes.mjs" --max-attempts 2 --max-credits 80 --allow-fix examples/profile-save/run-output.txt --kane-cmd E:\Opencode_workspace\npm-global\kane-cli.cmd --report E:\Hackathon\BugBoing\examples\profile-save\report.json
+
+[bugboing] CONTRACT: no_kane_pass_no_green
+[bugboing] Only Kane run_end status=passed counts as green. Fixer exit 0 is never proof.
+[bugboing] fix gate: verdict.confirmed && family=application_issue; scope-guard=revert
+
+[bugboing] check=profile-required-name attempt=1/2
+[bugboing] trust=kane_verified_fail status=failed reason=Final verification failed: "The page must show the validation message 'Name is required' and must NOT show 'Saved!'." test_url=https://test-manager.lambdatest.com/projects/01M843ABM4C5EK249BW1SSWQDA/test-cases/01M861G5N8PZWYZAHQNE5AGAX7/dashboard/share/US_UQW84KZKF067TIMXT7JONHVV1HFQYG5DESRS16BRPMN66RC7YA9I6EVA3HYIQ2F9?type=summary&agentView=true&fqdn=summary-page
+[bugboing] invoking fix-cmd for profile-required-name (allowed: examples/profile-save/run-output.txt, examples/profile-save/site/**)
+[bugboing] fix-cmd exit=0 (not proof; rerunning Kane)
+[bugboing] scope: clean
+
+[bugboing] check=profile-required-name attempt=2/2
+[bugboing] trust=kane_verified_pass status=passed reason=Objective completed test_url=https://test-manager.lambdatest.com/projects/01M843ABM4C5EK249BW1SSWQDA/test-cases/01M861KS6HCVDWY9700V7JR1AH/dashboard/share/US_PLQTWOOOLNPCE9RIY117TT5M4SUKTS2748915Q99KHCGMO6H42U65KHY3F6ARF3Y?type=summary&agentView=true&fqdn=summary-page
+[bugboing] VERIFIED BY KANE: profile-required-name
+
+[bugboing] CONTRACT no_kane_pass_no_green: A check is green only when Kane CLI emits run_end with status=passed. Fixer exit codes and missing run_end are never trusted as proof.
+[bugboing] RESULT VERIFIED_PASS
+[bugboing] credits: consumed=38.64055 limit=80 exhausted=false
+[bugboing]   - profile-required-name: kane_verified_pass (Kane run_end reported status=passed.)
+{
+  "tool": "bugboing",
+  "version": "0.3.0",
+  "contract": {
+    "rule": "no_kane_pass_no_green",
+    "version": 1,
+    "enforced": true,
+    "description": "A check is green only when Kane CLI emits run_end with status=passed. Fixer exit codes and missing run_end are never trusted as proof."
+  },
+  "startedAt": "2026-11-24T05:47:03.692Z",
+  "finishedAt": "2026-11-24T05:50:19.292Z",
+  "passed": true,
+  "credits": {
+    "consumed": 38.64055,
+    "limit": 80,
+    "exhausted": false
+  },
+  "checks": [
+    {
+      "name": "profile-required-name",
+      "objective": "Clear the Name field so it is empty, then click 'Save changes'. The page must show the validation message 'Name is required' and must NOT show 'Saved!'. Fail if 'Saved!' appears or if 'Name is required' is missing.",
+      "url": "http://127.0.0.1:4183",
+      "attempt": 2,
+      "passed": true,
+      "kaneVerified": true,
+      "verificationSource": "kane_run_end",
+      "trust": "kane_verified_pass",
+      "trustReason": "Kane run_end reported status=passed.",
+      "status": "passed",
+      "reason": "Objective completed",
+      "resultCode": 100,
+      "reasonCode": "success.complete",
+      "testUrl": "https://test-manager.lambdatest.com/projects/01M843ABM4C5EK249BW1SSWQDA/test-cases/01M861KS6HCVDWY9700V7JR1AH/dashboard/share/US_PLQTWOOOLNPCE9RIY117TT5M4SUKTS2748915Q99KHCGMO6H42U65KHY3F6ARF3Y?type=summary&agentView=true&fqdn=summary-page",
+      "sessionDir": "C:\\Users\\<user>/.testmuai/kaneai/sessions\\e93130cc-ab82-49d8-826c-ab5ca4dfb673",
+      "summary": "You asked to clear the Name field and save the form.\nThe Name field was cleared and Save changes was selected.\nThe form showed “Name is required” and did not show a “Saved!” confirmation, so the invalid change was not saved.",
+      "oneLiner": "validated a required Name field on the profile form",
+      "creditsConsumed": 16.353303999999998,
+      "rawRunEnd": {
+        "type": "run_end",
+        "status": "passed",
+        "summary": "You asked to clear the Name field and save the form.\nThe Name field was cleared and Save changes was selected.\nThe form showed “Name is required” and did not show a “Saved!” confirmation, so the invalid change was not saved.",
+        "one_liner": "validated a required Name field on the profile form",
+        "final_state": {
+          "url": "http://127.0.0.1:4183/",
+          "name_required_message_visible": "true",
+          "saved_message_visible": "false"
+        },
+        "reason": "Objective completed",
+        "duration": 51.1,
+        "bifurcated": false,
+        "total_runs": 1,
+        "context": {
+          "memory": {
+            "name_required_message_visible": {
+              "extracted_value": "true",
+              "operator": "equals",
+              "transforms": [],
+              "json_path": null,
+              "reasoning": "value: 'true' -> 'true'; equals 'true' -> PASS",
+              "analyzer_type": "textual_visual",
+              "step": 4,
+              "query": "whether the validation message 'Name is required' is present in the status message below the Save changes button",
+              "condition": "The page shows the validation message 'Name is required'.",
+              "human_description": "Checking whether the required-name validation message is present",
+              "expected_value": "true",
+              "subject": "the validation message 'Name is required'",
+              "must_be": "present",
+              "code_js": "el(6).innerText.trim() === 'Name is required'",
+              "wrapped_js": "(els) => {\n  const __m = {6: 0};\n  const el = (i) => els[__m[i]];\n  const __v = (el(6).innerText.trim() === 'Name is required');\n  return (typeof __v === 'boolean' ? String(__v) : __v);\n}",
+              "locators": [
+                "internal:text=\"Name is required\"i"
+              ],
+              "needs_unit_conversion": false
+            },
+            "saved_message_visible": {
+              "extracted_value": "false",
+              "operator": "equals",
+              "transforms": [],
+              "json_path": null,
+              "reasoning": "value: 'false' -> 'false'; equals 'false' -> PASS; replay check: the replay reader answered 'false' -> PASS",
+              "analyzer_type": "visual",
+              "step": 4,
+              "query": "whether the 'Saved!' message is visible in the profile form panel",
+              "condition": "The page must NOT show 'Saved!'.",
+              "human_description": "Checking whether the saved confirmation message is present",
+              "expected_value": "false",
+              "subject": "'Saved!'",
+              "must_be": "absent"
+            }
+          },
+          "variables": {
+            "name_required_message_visible": {
+              "syntax": "{{name_required_message_visible}}",
+              "value": "true",
+              "type": "memory",
+              "secret": false
+            },
+            "saved_message_visible": {
+              "syntax": "{{saved_message_visible}}",
+              "value": "false",
+              "type": "memory",
+              "secret": false
+            }
+          },
+          "pointer": "(passed) validated a required Name field on the profile form"
+        },
+        "credits_consumed": 16.353303999999998,
+        "session_dir": "C:\\Users\\<user>/.testmuai/kaneai/sessions\\e93130cc-ab82-49d8-826c-ab5ca4dfb673",
+        "run_dir": "C:\\Users\\<user>/.testmuai/kaneai/sessions\\e93130cc-ab82-49d8-826c-ab5ca4dfb673\\runs\\0",
+        "result_code": 100,
+        "reason_code": "success.complete",
+        "per_flow_metadata": [
+          {
+            "result_code": "100",
+            "reason_code": "success.complete",
+            "error_message": null,
+            "summary": "You asked to clear the Name field and save the form.\nThe Name field was cleared and Save changes was selected.\nThe form showed “Name is required” and did not show a “Saved!” confirmation, so the invalid change was not saved.",
+            "one_liner": "validated a required Name field on the profile form",
+            "credits_consumed": 16.353303999999998
+          }
+        ],
+        "run_id": "run-0",
+        "test_url": "https://test-manager.lambdatest.com/projects/01M843ABM4C5EK249BW1SSWQDA/test-cases/01M861KS6HCVDWY9700V7JR1AH/dashboard/share/US_PLQTWOOOLNPCE9RIY117TT5M4SUKTS2748915Q99KHCGMO6H42U65KHY3F6ARF3Y?type=summary&agentView=true&fqdn=summary-page",
+        "coverage": {
+          "status": "skipped"
+        },
+        "v": 1,
+        "ts": "2026-11-24T05:50:16.926Z"
+      },
+      "stdoutTail": "v\":1,\"ts\":\"2026-11-24T05:49:58.846Z\"}\n{\"step\":6,\"status\":\"running\",\"remark\":\"Step 5\",\"v\":1,\"ts\":\"2026-11-24T05:49:59.484Z\"}\n{\"step\":6,\"status\":\"done\",\"remark\":\"assert: The page must show the validation message 'Name is required' and must NOT show '\",\"v\":1,\"ts\":\"2026-11-24T05:49:59.505Z\"}\n{\"type\":\"coverage\",\"status\":\"skipped\",\"reason\":\"not_assurance_project\",\"pack\":\"C:\\\\Users\\\\<user>\\\\.testmuai\\\\kaneai\\\\sessions\\\\e93130cc-ab82-49d8-826c-ab5ca4dfb673\\\\evidence\\\\7ba658df-0961-499c-9535-f4bda442c4c5.evidence\",\"v\":1,\"ts\":\"2026-11-24T05:50:16.926Z\"}\n{\"type\":\"run_end\",\"status\":\"passed\",\"summary\":\"You asked to clear the Name field and save the form.\\nThe Name field was cleared and Save changes was selected.\\nThe form showed “Name is required” and did not show a “Saved!” confirmation, so the invalid change was not saved.\",\"one_liner\":\"validated a required Name field on the profile form\",\"final_state\":{\"url\":\"http://127.0.0.1:4183/\",\"name_required_message_visible\":\"true\",\"saved_message_visible\":\"false\"},\"reason\":\"Objective completed\",\"duration\":51.1,\"bifurcated\":false,\"total_runs\":1,\"context\":{\"memory\":{\"name_required_message_visible\":{\"extracted_value\":\"true\",\"operator\":\"equals\",\"transforms\":[],\"json_path\":null,\"reasoning\":\"value: 'true' -> 'true'; equals 'true' -> PASS\",\"analyzer_type\":\"textual_visual\",\"step\":4,\"query\":\"whether the validation message 'Name is required' is present in the status message below the Save changes button\",\"condition\":\"The page shows the validation message 'Name is required'.\",\"human_description\":\"Checking whether the required-name validation message is present\",\"expected_value\":\"true\",\"subject\":\"the validation message 'Name is required'\",\"must_be\":\"present\",\"code_js\":\"el(6).innerText.trim() === 'Name is required'\",\"wrapped_js\":\"(els) => {\\n  const __m = {6: 0};\\n  const el = (i) => els[__m[i]];\\n  const __v = (el(6).innerText.trim() === 'Name is required');\\n  return (typeof __v === 'boolean' ? String(__v) : __v);\\n}\",\"locators\":[\"internal:text=\\\"Name is required\\\"i\"],\"needs_unit_conversion\":false},\"saved_message_visible\":{\"extracted_value\":\"false\",\"operator\":\"equals\",\"transforms\":[],\"json_path\":null,\"reasoning\":\"value: 'false' -> 'false'; equals 'false' -> PASS; replay check: the replay reader answered 'false' -> PASS\",\"analyzer_type\":\"visual\",\"step\":4,\"query\":\"whether the 'Saved!' message is visible in the profile form panel\",\"condition\":\"The page must NOT show 'Saved!'.\",\"human_description\":\"Checking whether the saved confirmation message is present\",\"expected_value\":\"false\",\"subject\":\"'Saved!'\",\"must_be\":\"absent\"}},\"variables\":{\"name_required_message_visible\":{\"syntax\":\"{{name_required_message_visible}}\",\"value\":\"true\",\"type\":\"memory\",\"secret\":false},\"saved_message_visible\":{\"syntax\":\"{{saved_message_visible}}\",\"value\":\"false\",\"type\":\"memory\",\"secret\":false}},\"pointer\":\"(passed) validated a required Name field on the profile form\"},\"credits_consumed\":16.353303999999998,\"session_dir\":\"C:\\\\Users\\\\<user>/.testmuai/kaneai/sessions\\\\e93130cc-ab82-49d8-826c-ab5ca4dfb673\",\"run_dir\":\"C:\\\\Users\\\\<user>/.testmuai/kaneai/sessions\\\\e93130cc-ab82-49d8-826c-ab5ca4dfb673\\\\runs\\\\0\",\"result_code\":100,\"reason_code\":\"success.complete\",\"per_flow_metadata\":[{\"result_code\":\"100\",\"reason_code\":\"success.complete\",\"error_message\":null,\"summary\":\"You asked to clear the Name field and save the form.\\nThe Name field was cleared and Save changes was selected.\\nThe form showed “Name is required” and did not show a “Saved!” confirmation, so the invalid change was not saved.\",\"one_liner\":\"validated a required Name field on the profile form\",\"credits_consumed\":16.353303999999998}],\"run_id\":\"run-0\",\"test_url\":\"https://test-manager.lambdatest.com/projects/01M843ABM4C5EK249BW1SSWQDA/test-cases/01M861KS6HCVDWY9700V7JR1AH/dashboard/share/US_PLQTWOOOLNPCE9RIY117TT5M4SUKTS2748915Q99KHCGMO6H42U65KHY3F6ARF3Y?type=summary&agentView=true&fqdn=summary-page\",\"coverage\":{\"status\":\"skipped\"},\"v\":1,\"ts\":\"2026-11-24T05:50:16.926Z\"}\n",
+      "stderrTail": "Skill update available: not installed → 0.1.4 — run `kane-cli install skill`\n\nRunning on: Desktop · Chrome\nevidence: view locally with `kane-cli evidence serve C:\\Users\\<user>\\.testmuai\\kaneai\\sessions\\e93130cc-ab82-49d8-826c-ab5ca4dfb673\\evidence\\7ba658df-0961-499c-9535-f4bda442c4c5.evidence`\n",
+      "exitCode": 0,
+      "attemptHistory": [
+        {
+          "name": "profile-required-name",
+          "objective": "Clear the Name field so it is empty, then click 'Save changes'. The page must show the validation message 'Name is required' and must NOT show 'Saved!'. Fail if 'Saved!' appears or if 'Name is required' is missing.",
+          "url": "http://127.0.0.1:4183",
+          "attempt": 1,
+          "passed": false,
+          "kaneVerified": false,
+          "verificationSource": "kane_run_end",
+          "trust": "kane_verified_fail",
+          "trustReason": "Kane run_end reported status=failed; BugBoing treats this as not green.",
+          "status": "failed",
+          "reason": "Final verification failed: \"The page must show the validation message 'Name is required' and must NOT show 'Saved!'.\"",
+          "resultCode": 740,
+          "reasonCode": "assertion_error.confirmed_product_bug",
+          "testUrl": "https://test-manager.lambdatest.com/projects/01M843ABM4C5EK249BW1SSWQDA/test-cases/01M861G5N8PZWYZAHQNE5AGAX7/dashboard/share/US_UQW84KZKF067TIMXT7JONHVV1HFQYG5DESRS16BRPMN66RC7YA9I6EVA3HYIQ2F9?type=summary&agentView=true&fqdn=summary-page",
+          "sessionDir": "C:\\Users\\<user>/.testmuai/kaneai/sessions\\645ec37d-ed44-4cc9-a320-b4445dcc98dd",
+          "summary": "The form accepted a blank Name and displayed a saved confirmation rather than stopping the save and showing the required-field message.\nAdd required-field validation before saving. When Name is blank, show “Name is required” and do not display “Saved!”.\nevidence: objective_contradiction: check FAILED: The page must show the validation message 'Name is required'. — expected: true | observed: {{name_required\nevidence: objective_contradiction: check FAILED: The page must NOT show 'Saved!'. — expected: false | observed: {{saved_message}}",
+          "oneLiner": "Saving an empty Name succeeds instead of showing “Name is required.”",
+          "creditsConsumed": 22.2872475,
+          "rawRunEnd": {
+            "type": "run_end",
+            "status": "failed",
+            "summary": "The form accepted a blank Name and displayed a saved confirmation rather than stopping the save and showing the required-field message.\nAdd required-field validation before saving. When Name is blank, show “Name is required” and do not display “Saved!”.\nevidence: objective_contradiction: check FAILED: The page must show the validation message 'Name is required'. — expected: true | observed: {{name_required\nevidence: objective_contradiction: check FAILED: The page must NOT show 'Saved!'. — expected: false | observed: {{saved_message}}",
+            "one_liner": "Saving an empty Name succeeds instead of showing “Name is required.”",
+            "final_state": {},
+            "reason": "Final verification failed: \"The page must show the validation message 'Name is required' and must NOT show 'Saved!'.\"",
+            "duration": 44,
+            "bifurcated": false,
+            "total_runs": 1,
+            "context": {
+              "memory": {
+                "name_required_validation_message": {
+                  "extracted_value": "false",
+                  "operator": "equals",
+                  "transforms": [],
+                  "json_path": null,
+                  "reasoning": "value: 'false' -> 'false'; equals 'true' -> FAIL",
+                  "analyzer_type": "visual",
+                  "step": 4,
+                  "query": "whether the 'Name is required' validation message is visible in the profile form",
+                  "condition": "The page must show the validation message 'Name is required'.",
+                  "human_description": "Checking whether the name validation message is present",
+                  "expected_value": "true",
+                  "subject": "'Name is required' validation message",
+                  "must_be": "present"
+                },
+                "saved_message": {
+                  "extracted_value": "true",
+                  "operator": "equals",
+                  "transforms": [],
+                  "json_path": null,
+                  "reasoning": "value: 'true' -> 'true'; equals 'false' -> FAIL",
+                  "analyzer_type": "textual_visual",
+                  "step": 4,
+                  "query": "whether the 'Saved!' status message is present in the profile form",
+                  "condition": "The page must NOT show 'Saved!'.",
+                  "human_description": "Checking whether the saved status message is present",
+                  "expected_value": "false",
+                  "subject": "'Saved!'",
+                  "must_be": "absent",
+                  "code_js": "el(6).innerText.trim() === 'Saved!'",
+                  "wrapped_js": "(els) => {\n  const __m = {6: 0};\n  const el = (i) => els[__m[i]];\n  const __v = (el(6).innerText.trim() === 'Saved!');\n  return (typeof __v === 'boolean' ? String(__v) : __v);\n}",
+                  "locators": [
+                    "internal:text=\"Saved!\"i"
+                  ],
+                  "needs_unit_conversion": false
+                }
+              },
+              "variables": {
+                "name_required_validation_message": {
+                  "syntax": "{{name_required_validation_message}}",
+                  "value": "false",
+                  "type": "memory",
+                  "secret": false
+                },
+                "saved_message": {
+                  "syntax": "{{saved_message}}",
+                  "value": "true",
+                  "type": "memory",
+                  "secret": false
+                }
+              },
+              "pointer": "(failed) Saving an empty Name succeeds instead of showing “Name is required.”"
+            },
+            "credits_consumed": 22.2872475,
+            "session_dir": "C:\\Users\\<user>/.testmuai/kaneai/sessions\\645ec37d-ed44-4cc9-a320-b4445dcc98dd",
+            "run_dir": "C:\\Users\\<user>/.testmuai/kaneai/sessions\\645ec37d-ed44-4cc9-a320-b4445dcc98dd\\runs\\0",
+            "result_code": 740,
+            "reason_code": "assertion_error.confirmed_product_bug",
+            "per_flow_metadata": [
+              {
+                "result_code": "740",
+                "reason_code": "assertion_error.confirmed_product_bug",
+                "error_message": "Final verification failed: \"The page must show the validation message 'Name is required' and must NOT show 'Saved!'.\"",
+                "summary": "The form accepted a blank Name and displayed a saved confirmation rather than stopping the save and showing the required-field message.\nAdd required-field validation before saving. When Name is blank, show “Name is required” and do not display “Saved!”.\nevidence: objective_contradiction: check FAILED: The page must show the validation message 'Name is required'. — expected: true | observed: {{name_required\nevidence: objective_contradiction: check FAILED: The page must NOT show 'Saved!'. — expected: false | observed: {{saved_message}}",
+                "one_liner": "Saving an empty Name succeeds instead of showing “Name is required.”",
+                "credits_consumed": 22.2872475
+              }
+            ],
+            "run_id": "run-0",
+            "verdict": {
+              "confirmed": true,
+              "status": "failed",
+              "family": "application_issue",
+              "category": "validation_defect",
+              "category_proposal": "",
+              "severity": "major",
+              "root_cause": "The form accepted a blank Name and displayed a saved confirmation rather than stopping the save and showing the required-field message.",
+              "agent_fault_assessment": "The agent followed the requested flow: it cleared the Name textbox and clicked Save changes. The screenshots show the field empty before the click and “Saved!” afterward, so the agent did not cause the incorrect result.",
+              "bug_title": "Empty Name is saved without required-field validation",
+              "signals": [
+                {
+                  "step": "0-5",
+                  "kind": "objective_contradiction",
+                  "excerpt": "check FAILED: The page must show the validation message 'Name is required'. — expected: true | observed: {{name_required_validation_message}}"
+                },
+                {
+                  "step": "0-5",
+                  "kind": "objective_contradiction",
+                  "excerpt": "check FAILED: The page must NOT show 'Saved!'. — expected: false | observed: {{saved_message}}"
+                }
+              ],
+              "confidence": 0.99,
+              "suggestion": "Add required-field validation before saving. When Name is blank, show “Name is required” and do not display “Saved!”.",
+              "one_liner": "Saving an empty Name succeeds instead of showing “Name is required.”",
+              "relevant_steps": [
+                2,
+                3,
+                5
+              ],
+              "culprit_step": "0-3",
+              "credits_consumed": 3.6052999999999997,
+              "known_bug_id": "",
+              "category_name": "",
+              "mode": "terminal"
+            },
+            "test_url": "https://test-manager.lambdatest.com/projects/01M843ABM4C5EK249BW1SSWQDA/test-cases/01M861G5N8PZWYZAHQNE5AGAX7/dashboard/share/US_UQW84KZKF067TIMXT7JONHVV1HFQYG5DESRS16BRPMN66RC7YA9I6EVA3HYIQ2F9?type=summary&agentView=true&fqdn=summary-page",
+            "coverage": {
+              "status": "skipped"
+            },
+            "v": 1,
+            "ts": "2026-11-24T05:48:02.492Z"
+          },
+          "verdict": {
+            "confirmed": true,
+            "status": "failed",
+            "family": "application_issue",
+            "category": "validation_defect",
+            "category_proposal": "",
+            "severity": "major",
+            "root_cause": "The form accepted a blank Name and displayed a saved confirmation rather than stopping the save and showing the required-field message.",
+            "agent_fault_assessment": "The agent followed the requested flow: it cleared the Name textbox and clicked Save changes. The screenshots show the field empty before the click and “Saved!” afterward, so the agent did not cause the incorrect result.",
+            "bug_title": "Empty Name is saved without required-field validation",
+            "signals": [
+              {
+                "step": "0-5",
+                "kind": "objective_contradiction",
+                "excerpt": "check FAILED: The page must show the validation message 'Name is required'. — expected: true | observed: {{name_required_validation_message}}"
+              },
+              {
+                "step": "0-5",
+                "kind": "objective_contradiction",
+                "excerpt": "check FAILED: The page must NOT show 'Saved!'. — expected: false | observed: {{saved_message}}"
+              }
+            ],
+            "confidence": 0.99,
+            "suggestion": "Add required-field validation before saving. When Name is blank, show “Name is required” and do not display “Saved!”.",
+            "one_liner": "Saving an empty Name succeeds instead of showing “Name is required.”",
+            "relevant_steps": [
+              2,
+              3,
+              5
+            ],
+            "culprit_step": "0-3",
+            "credits_consumed": 3.6052999999999997,
+            "known_bug_id": "",
+            "category_name": "",
+            "mode": "terminal"
+          },
+          "repair": {
+            "suggestion": "Add required-field validation before saving. When Name is blank, show “Name is required” and do not display “Saved!”.",
+            "culpritStep": "0-3",
+            "rootCause": "The form accepted a blank Name and displayed a saved confirmation rather than stopping the save and showing the required-field message.",
+            "bugTitle": "Empty Name is saved without required-field validation",
+            "category": "validation_defect",
+            "severity": "major"
+          },
+          "stdoutTail": "ue\":\"true\",\"operator\":\"equals\",\"transforms\":[],\"json_path\":null,\"reasoning\":\"value: 'true' -> 'true'; equals 'false' -> FAIL\",\"analyzer_type\":\"textual_visual\",\"step\":4,\"query\":\"whether the 'Saved!' status message is present in the profile form\",\"condition\":\"The page must NOT show 'Saved!'.\",\"human_description\":\"Checking whether the saved status message is present\",\"expected_value\":\"false\",\"subject\":\"'Saved!'\",\"must_be\":\"absent\",\"code_js\":\"el(6).innerText.trim() === 'Saved!'\",\"wrapped_js\":\"(els) => {\\n  const __m = {6: 0};\\n  const el = (i) => els[__m[i]];\\n  const __v = (el(6).innerText.trim() === 'Saved!');\\n  return (typeof __v === 'boolean' ? String(__v) : __v);\\n}\",\"locators\":[\"internal:text=\\\"Saved!\\\"i\"],\"needs_unit_conversion\":false}},\"variables\":{\"name_required_validation_message\":{\"syntax\":\"{{name_required_validation_message}}\",\"value\":\"false\",\"type\":\"memory\",\"secret\":false},\"saved_message\":{\"syntax\":\"{{saved_message}}\",\"value\":\"true\",\"type\":\"memory\",\"secret\":false}},\"pointer\":\"(failed) Saving an empty Name succeeds instead of showing “Name is required.”\"},\"credits_consumed\":22.2872475,\"session_dir\":\"C:\\\\Users\\\\<user>/.testmuai/kaneai/sessions\\\\645ec37d-ed44-4cc9-a320-b4445dcc98dd\",\"run_dir\":\"C:\\\\Users\\\\<user>/.testmuai/kaneai/sessions\\\\645ec37d-ed44-4cc9-a320-b4445dcc98dd\\\\runs\\\\0\",\"result_code\":740,\"reason_code\":\"assertion_error.confirmed_product_bug\",\"per_flow_metadata\":[{\"result_code\":\"740\",\"reason_code\":\"assertion_error.confirmed_product_bug\",\"error_message\":\"Final verification failed: \\\"The page must show the validation message 'Name is required' and must NOT show 'Saved!'.\\\"\",\"summary\":\"The form accepted a blank Name and displayed a saved confirmation rather than stopping the save and showing the required-field message.\\nAdd required-field validation before saving. When Name is blank, show “Name is required” and do not display “Saved!”.\\nevidence: objective_contradiction: check FAILED: The page must show the validation message 'Name is required'. — expected: true | observed: {{name_required\\nevidence: objective_contradiction: check FAILED: The page must NOT show 'Saved!'. — expected: false | observed: {{saved_message}}\",\"one_liner\":\"Saving an empty Name succeeds instead of showing “Name is required.”\",\"credits_consumed\":22.2872475}],\"run_id\":\"run-0\",\"verdict\":{\"confirmed\":true,\"status\":\"failed\",\"family\":\"application_issue\",\"category\":\"validation_defect\",\"category_proposal\":\"\",\"severity\":\"major\",\"root_cause\":\"The form accepted a blank Name and displayed a saved confirmation rather than stopping the save and showing the required-field message.\",\"agent_fault_assessment\":\"The agent followed the requested flow: it cleared the Name textbox and clicked Save changes. The screenshots show the field empty before the click and “Saved!” afterward, so the agent did not cause the incorrect result.\",\"bug_title\":\"Empty Name is saved without required-field validation\",\"signals\":[{\"step\":\"0-5\",\"kind\":\"objective_contradiction\",\"excerpt\":\"check FAILED: The page must show the validation message 'Name is required'. — expected: true | observed: {{name_required_validation_message}}\"},{\"step\":\"0-5\",\"kind\":\"objective_contradiction\",\"excerpt\":\"check FAILED: The page must NOT show 'Saved!'. — expected: false | observed: {{saved_message}}\"}],\"confidence\":0.99,\"suggestion\":\"Add required-field validation before saving. When Name is blank, show “Name is required” and do not display “Saved!”.\",\"one_liner\":\"Saving an empty Name succeeds instead of showing “Name is required.”\",\"relevant_steps\":[2,3,5],\"culprit_step\":\"0-3\",\"credits_consumed\":3.6052999999999997,\"known_bug_id\":\"\",\"category_name\":\"\",\"mode\":\"terminal\"},\"test_url\":\"https://test-manager.lambdatest.com/projects/01M843ABM4C5EK249BW1SSWQDA/test-cases/01M861G5N8PZWYZAHQNE5AGAX7/dashboard/share/US_UQW84KZKF067TIMXT7JONHVV1HFQYG5DESRS16BRPMN66RC7YA9I6EVA3HYIQ2F9?type=summary&agentView=true&fqdn=summary-page\",\"coverage\":{\"status\":\"skipped\"},\"v\":1,\"ts\":\"2026-11-24T05:48:02.492Z\"}\n",
+          "stderrTail": "Skill update available: not installed → 0.1.4 — run `kane-cli install skill`\n\nRunning on: Desktop · Chrome\nevidence: 1 status_disagrees advisory(ies) — self-explained by triaged failure record(s)\nevidence: view locally with `kane-cli evidence serve C:\\Users\\<user>\\.testmuai\\kaneai\\sessions\\645ec37d-ed44-4cc9-a320-b4445dcc98dd\\evidence\\960a50cb-fd3f-4ba6-ba10-fb600207f577.evidence`\n",
+          "exitCode": 1,
+          "fixCmd": "node \"E:\\Hackathon\\BugBoing\\examples\\profile-save\\fix-with-hermes.mjs\"",
+          "fixExitCode": 0,
+          "fixStdoutTail": "\"tool_result\", \"name\": \"browser_exec\", \"tool_call_id\": \"call_c79931f0a2a84cfa87ee3ace\", \"output\": \"{\\\"success\\\": true, \\\"exit_code\\\": 0, \\\"output\\\": \\\"Ada\\\\nName is required | error\\\\n\\\", \\\"workspace\\\": \\\"C:\\\\\\\\Users\\\\\\\\<user>\\\\\\\\AppData\\\\\\\\Local\\\\\\\\hermes\\\\\\\\cache\\\\\\\\browser-use\\\\\\\\workspace\\\\\\\\local-b302b68220f0258c92259aa29e69ded9de886a1268427343297d444006e4316e\\\"}\", \"duration_ms\": 7784, \"is_error\": false, \"timestamp\": 1795499333313}\r\n{\"type\": \"text\", \"text\": \"\\n\\nFixed\", \"timestamp\": 1795499338561}\r\n{\"type\": \"text\", \"text\": \". The\", \"timestamp\": 1795499338581}\r\n{\"type\": \"text\", \"text\": \" bug was a\", \"timestamp\": 1795499338626}\r\n{\"type\": \"text\", \"text\": \" missing guard\", \"timestamp\": 1795499338673}\r\n{\"type\": \"text\", \"text\": \" in examples\", \"timestamp\": 1795499338732}\r\n{\"type\": \"text\", \"text\": \"/profile-save/site/app\", \"timestamp\": 1795499338772}\r\n{\"type\": \"text\", \"text\": \".js \", \"timestamp\": 1795499338845}\r\n{\"type\": \"text\", \"text\": \"— the click handler\", \"timestamp\": 1795499338859}\r\n{\"type\": \"text\", \"text\": \" always set \\\"Saved\", \"timestamp\": 1795499338913}\r\n{\"type\": \"text\", \"text\": \"!\\\" regardless of input\", \"timestamp\": 1795499338950}\r\n{\"type\": \"text\", \"text\": \".\\n\\nChange\", \"timestamp\": 1795499338994}\r\n{\"type\": \"text\", \"text\": \": trim\", \"timestamp\": 1795499339708}\r\n{\"type\": \"text\", \"text\": \" the Name\", \"timestamp\": 1795499339709}\r\n{\"type\": \"text\", \"text\": \" value\", \"timestamp\": 1795499339709}\r\n{\"type\": \"text\", \"text\": \",\", \"timestamp\": 1795499339710}\r\n{\"type\": \"text\", \"text\": \" and if empty show\", \"timestamp\": 1795499339710}\r\n{\"type\": \"text\", \"text\": \" \\\"Name is required\\\" with the existing\", \"timestamp\": 1795499339711}\r\n{\"type\": \"text\", \"text\": \" `error` class\", \"timestamp\": 1795499339711}\r\n{\"type\": \"text\", \"text\": \" and return before any\", \"timestamp\": 1795499339712}\r\n{\"type\": \"text\", \"text\": \" success path;\", \"timestamp\": 1795499339712}\r\n{\"type\": \"text\", \"text\": \" only non-empty names\", \"timestamp\": 1795499339713}\r\n{\"type\": \"text\", \"text\": \" reach\", \"timestamp\": 1795499339713}\r\n{\"type\": \"text\", \"text\": \" \\\"Saved!\\\".\\n\\n\", \"timestamp\": 1795499339713}\r\n{\"type\": \"text\", \"text\": \"Verified in a\", \"timestamp\": 1795499339714}\r\n{\"type\": \"text\", \"text\": \" real browser against\", \"timestamp\": 1795499339763}\r\n{\"type\": \"text\", \"text\": \" http://12\", \"timestamp\": 1795499339801}\r\n{\"type\": \"text\", \"text\": \"7.0.\", \"timestamp\": 1795499339854}\r\n{\"type\": \"text\", \"text\": \"0.1:\", \"timestamp\": 1795499339901}\r\n{\"type\": \"text\", \"text\": \"4183\", \"timestamp\": 1795499339952}\r\n{\"type\": \"text\", \"text\": \": cleared\", \"timestamp\": 1795499340678}\r\n{\"type\": \"text\", \"text\": \" the field\", \"timestamp\": 1795499340679}\r\n{\"type\": \"text\", \"text\": \", clicked Save\", \"timestamp\": 1795499340679}\r\n{\"type\": \"text\", \"text\": \" changes, status reads\", \"timestamp\": 1795499340680}\r\n{\"type\": \"text\", \"text\": \" `\", \"timestamp\": 1795499340680}\r\n{\"type\": \"text\", \"text\": \"Name is required |\", \"timestamp\": 1795499340681}\r\n{\"type\": \"text\", \"text\": \" error`,\", \"timestamp\": 1795499340682}\r\n{\"type\": \"text\", \"text\": \" no\", \"timestamp\": 1795499340682}\r\n{\"type\": \"text\", \"text\": \" \\\"Saved!\", \"timestamp\": 1795499340683}\r\n{\"type\": \"text\", \"text\": \"\\\".\", \"timestamp\": 1795499340683}\r\n{\"type\": \"result\", \"session_id\": \"local-b302b68220f0258c92259aa29e69ded9de886a1268427343297d444006e4316e\", \"exit_code\": 0, \"text\": \"Fixed. The bug was a missing guard in examples/profile-save/site/app.js — the click handler always set \\\"Saved!\\\" regardless of input.\\n\\nChange: trim the Name value, and if empty show \\\"Name is required\\\" with the existing `error` class and return before any success path; only non-empty names reach \\\"Saved!\\\".\\n\\nVerified in a real browser against http://127.0.0.1:4183: cleared the field, clicked Save changes, status reads `Name is required | error`, no \\\"Saved!\\\".\", \"tokens\": {\"input\": 90544, \"output\": 564, \"total\": 91108, \"cache_read\": 81280, \"cache_write\": 0}, \"duration_ms\": 52024, \"timestamp\": 1795499341181}\r\n[hermes-fixer] exit=0 signal= model=meituan/longcat-2.5:free\n",
+          "fixStderrTail": "Session: local-b302b68220f0258c92259aa29e69ded9de886a1268427343297d444006e4316e\r\n\r\nsession_id: local-b302b68220f0258c92259aa29e69ded9de886a1268427343297d444006e4316e\r\n",
+          "fixDecision": {
+            "invoked": true,
+            "reason": "Kane confirmed an application issue."
+          },
+          "scope": {
+            "enforced": true,
+            "allowed": [
+              "examples/profile-save/run-output.txt",
+              "examples/profile-save/site/**"
+            ],
+            "violations": []
+          }
+        }
+      ]
+    }
+  ]
+}

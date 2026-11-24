@@ -1,0 +1,18 @@
+diff --git a/examples/profile-save/site/app.js b/examples/profile-save/site/app.js
+index 5e225c0..8638d29 100644
+--- a/examples/profile-save/site/app.js
++++ b/examples/profile-save/site/app.js
+@@ -5,7 +5,12 @@ const statusEl = document.getElementById("status");
+ saveBtn.addEventListener("click", () => {
+   const name = nameInput.value.trim();
+ 
+-  // BUG: required-name validation is missing. Empty names are reported as saved.
++  if (!name) {
++    statusEl.textContent = "Name is required";
++    statusEl.className = "error";
++    return;
++  }
++
+   statusEl.textContent = "Saved!";
+   statusEl.className = "success";
+ });
