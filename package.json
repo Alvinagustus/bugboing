@@ -1,6 +1,6 @@
 {
   "name": "bugboing",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
   "description": "Fail -> Kane evidence -> agent fix -> rerun loop for web verification.",

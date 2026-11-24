@@ -10,4 +10,6 @@ coverage/
 output-*/
 external-report.json
 checks.external.json
+smoke-report.json
+checks.smoke.json
 films/

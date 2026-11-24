@@ -28,6 +28,8 @@ type RunEnd = {
   [k: string]: unknown;
 };
 
+type Trust = "kane_verified_pass" | "kane_verified_fail" | "unverified_missing_run_end";
+
 type CheckResult = {
   name: string;
   objective: string;
@@ -36,6 +38,8 @@ type CheckResult = {
   passed: boolean;
   kaneVerified: boolean;
   verificationSource: "kane_run_end" | "none";
+  trust: Trust;
+  trustReason: string;
   status: string;
   reason: string;
   resultCode?: number | string;
@@ -58,7 +62,13 @@ type CheckResult = {
 
 type Report = {
   tool: "bugboing";
-  version: "0.1.0";
+  version: "0.2.0";
+  contract: {
+    rule: "no_kane_pass_no_green";
+    version: 1;
+    enforced: true;
+    description: "A check is green only when Kane CLI emits run_end with status=passed. Fixer exit codes and missing run_end are never trusted as proof.";
+  };
   startedAt: string;
   finishedAt: string;
   passed: boolean;
@@ -162,9 +172,25 @@ function extractRunEnd(stdout: string): RunEnd | undefined {
   return found;
 }
 
-function evaluateRunEnd(runEnd: RunEnd | undefined): { passed: boolean; kaneVerified: boolean; verificationSource: "kane_run_end" | "none"; status: string; reason: string } {
+function evaluateRunEnd(runEnd: RunEnd | undefined): {
+  passed: boolean;
+  kaneVerified: boolean;
+  verificationSource: "kane_run_end" | "none";
+  trust: Trust;
+  trustReason: string;
+  status: string;
+  reason: string;
+} {
   if (!runEnd) {
-    return { passed: false, kaneVerified: false, verificationSource: "none", status: "unverified", reason: "missing_kane_run_end" };
+    return {
+      passed: false,
+      kaneVerified: false,
+      verificationSource: "none",
+      trust: "unverified_missing_run_end",
+      trustReason: "Kane did not emit a run_end verdict; BugBoing refuses to treat this as green.",
+      status: "unverified",
+      reason: "missing_kane_run_end",
+    };
   }
   const status = String(runEnd.status ?? "unknown").toLowerCase();
   const passed = status === "passed";
@@ -172,6 +198,10 @@ function evaluateRunEnd(runEnd: RunEnd | undefined): { passed: boolean; kaneVeri
     passed,
     kaneVerified: passed,
     verificationSource: "kane_run_end",
+    trust: passed ? "kane_verified_pass" : "kane_verified_fail",
+    trustReason: passed
+      ? "Kane run_end reported status=passed."
+      : `Kane run_end reported status=${status}; BugBoing treats this as not green.`,
     status,
     reason: String(runEnd.reason ?? runEnd.reason_code ?? (passed ? "ok" : "unknown")),
   };
@@ -243,6 +273,9 @@ async function main() {
   const checks = await loadChecks(path.resolve(checksFile));
   const results: CheckResult[] = [];
 
+  console.log("[bugboing] CONTRACT: no_kane_pass_no_green");
+  console.log("[bugboing] Only Kane run_end status=passed counts as green. Fixer exit 0 is never proof.");
+
   for (const check of checks) {
     let last: CheckResult | undefined;
     const history: CheckResult[] = [];
@@ -251,20 +284,24 @@ async function main() {
       const r = await runKaneCheck(kaneCmd, check);
       r.attempt = attempt;
       last = r;
-      console.log(`[bugboing] status=${r.status} reason=${r.reason} test_url=${r.testUrl ?? ""}`);
+      console.log(`[bugboing] trust=${r.trust} status=${r.status} reason=${r.reason} test_url=${r.testUrl ?? ""}`);
       if (r.passed) {
+        console.log(`[bugboing] VERIFIED BY KANE: ${check.name}`);
         history.push(r);
         break;
       }
+      if (r.verificationSource === "none") {
+        console.log(`[bugboing] NOT GREEN: ${check.name} is unverified (missing Kane run_end). Fixer exit codes cannot make this green.`);
+      }
       if (attempt < maxAttempts && fixCmd) {
         console.log(`[bugboing] invoking fix-cmd for ${check.name}`);
-        const payload = { tool: "bugboing", check, attempt, maxAttempts, result: r };
+        const payload = { tool: "bugboing", contract: { rule: "no_kane_pass_no_green", version: 1 }, check, attempt, maxAttempts, result: r };
         const fix = await runFix(fixCmd, payload);
         r.fixCmd = fixCmd;
         r.fixExitCode = fix.code;
         r.fixStdoutTail = tail(fix.stdout);
         r.fixStderrTail = tail(fix.stderr);
-        console.log(`[bugboing] fix-cmd exit=${fix.code}`);
+        console.log(`[bugboing] fix-cmd exit=${fix.code} (not proof; rerunning Kane)`);
         history.push(r);
         if (fix.code !== 0) {
           console.log(`[bugboing] fix-cmd failed; stopping retries for this check`);
@@ -284,10 +321,27 @@ async function main() {
   }
 
   const passed = results.every((r) => r.passed);
-  const report: Report = { tool: "bugboing", version: "0.1.0", startedAt, finishedAt: new Date().toISOString(), passed, checks: results };
+  const report: Report = {
+    tool: "bugboing",
+    version: "0.2.0",
+    contract: {
+      rule: "no_kane_pass_no_green",
+      version: 1,
+      enforced: true,
+      description: "A check is green only when Kane CLI emits run_end with status=passed. Fixer exit codes and missing run_end are never trusted as proof.",
+    },
+    startedAt,
+    finishedAt: new Date().toISOString(),
+    passed,
+    checks: results,
+  };
   const reportJson = JSON.stringify(report, null, 2);
   if (reportFile) await writeFile(path.resolve(reportFile), reportJson, "utf8");
-  console.log(`\n[bugboing] RESULT ${passed ? "PASSED" : "FAILED"}`);
+  console.log(`\n[bugboing] CONTRACT no_kane_pass_no_green: ${report.contract.description}`);
+  console.log(`[bugboing] RESULT ${passed ? "VERIFIED_PASS" : "NOT_GREEN"}`);
+  for (const r of results) {
+    console.log(`[bugboing]   - ${r.name}: ${r.trust} (${r.trustReason})`);
+  }
   console.log(reportJson);
   process.exit(passed ? 0 : 1);
 }

@@ -1,20 +1,20 @@
 # BugBoing
 
 **Fail. Boing. Fix. Verify.**  
-BugBoing is a small, agent-agnostic verification loop around Kane CLI. When Kane catches a browser failure, BugBoing sends structured evidence to any `--fix-cmd`, reruns the same Kane check, and turns green **only** when Kane emits a passing `run_end`.
+BugBoing is a strict Kane-verified CLI wrapper for AI fix loops. It can run a fixer after a browser failure, but it turns green **only** when Kane CLI emits a passing `run_end`. Fixer exit `0`, missing verdicts, and unparseable output are never treated as success.
 
 > Hackathon: KaneCLI Online Hackathon (TestMu AI). Built for web verification with Kane CLI as the load-bearing verification engine.
 
 ## Problem
 
-AI coding agents can edit code fast, but they often miss the last mile: *did the fix actually work in a real browser?* BugBoing closes that gap by wiring Kane CLI's real-browser evidence back into the fix loop.
+AI coding agents can edit code fast, but they often miss the last mile: *did the fix actually work in a real browser?* A fixer can exit `0`, print "done", or patch the wrong thing — and you still don't have browser proof. BugBoing closes that gap by making Kane CLI the only pass/fail oracle.
 
 ## How It Works
 
 1. **Run** - BugBoing executes checks via `kane-cli run ... --headless --agent`.
-2. **Catch** - It parses Kane NDJSON `run_end` for pass/fail, reason, verdict, evidence, and Test Manager link.
-3. **Boing** - On failure, it invokes `--fix-cmd` and passes a structured failure payload on stdin (JSON).
-4. **Verify** - It reruns the same Kane check until Kane `run_end` passes or `--max-attempts` is reached. No Kane pass, no green.
+2. **Catch** - It parses Kane NDJSON `run_end` for status, reason/result codes, evidence, and Test Manager link.
+3. **Boing** - On failure, it invokes `--fix-cmd` and passes a structured failure payload on stdin (JSON), including `kaneVerified`, `verificationSource`, and `rawRunEnd`.
+4. **Verify** - It reruns the same Kane check. Only a Kane `run_end` with `status:"passed"` becomes green. Missing/unparseable `run_end` becomes `unverified` — never green.
 
 ```text
 checks.json ──> BugBoing ──> kane-cli run (--headless --agent)
@@ -39,12 +39,31 @@ BugBoing does **not** replace browser verification. Kane CLI is the only pass/fa
 
 Without Kane CLI, BugBoing has no trusted pass/fail signal.
 
-## Verification Contract (strict)
+## Verification Contract (the differentiator)
 
-- **No Kane pass, no green.** BugBoing only reports success when it parses a Kane `run_end` with `status: "passed"`.
-- **Fixer exit code is not proof.** A `--fix-cmd` can exit 0, but BugBoing still reruns Kane and requires a passing Kane verdict.
-- **Missing/unparseable `run_end` is unverified.** If Kane exits 0/1 without a `run_end`, BugBoing reports `unverified` / `missing_kane_run_end`, not success.
-- **Agent-agnostic fixer.** Any command can be plugged into `--fix-cmd`; it receives the failure payload JSON on stdin.
+This is the core of BugBoing. The loop pattern is crowded; the strict verdict contract is the point.
+
+| Case | BugBoing result | Why |
+|---|---|---|
+| Kane `run_end.status == "passed"` | **GREEN / VERIFIED** | Real Kane verdict |
+| Kane `run_end.status != "passed"` | **NOT GREEN** | Real Kane failure |
+| Fixer exits `0`, but no Kane pass | **NOT GREEN** | Fixer exit code is not proof |
+| Missing / unparseable `run_end` | **UNVERIFIED / NOT GREEN** | No verdict, no trust |
+
+The report makes this machine-visible:
+
+```json
+{
+  "contract": { "rule": "no_kane_pass_no_green", "version": 1, "enforced": true },
+  "checks": [{
+    "passed": false,
+    "kaneVerified": false,
+    "verificationSource": "none",
+    "trust": "unverified_missing_run_end",
+    "trustReason": "Kane did not emit a run_end verdict; BugBoing refuses to treat this as green."
+  }]
+}
+```
 
 ## Quick Start
 
@@ -95,19 +114,23 @@ npx tsx src/cli.ts verify --checks demo/checks.json --fix-cmd "node demo/fix-gen
 ]
 ```
 
-## Fix Command Contract
+## Fixer Interface (agent-agnostic, not the novelty)
 
-`--fix-cmd` receives JSON on stdin:
+The stdin fixer interface is useful plumbing, not the headline. Similar agent-cmd/stdin patterns exist in other tools; BugBoing's value is that **the fixer never decides green**.
+
+`--fix-cmd` receives structured JSON on stdin:
 
 ```json
 {
   "tool": "bugboing",
+  "contract": { "rule": "no_kane_pass_no_green", "version": 1 },
   "check": { "name": "...", "url": "...", "objective": "..." },
   "attempt": 1,
   "maxAttempts": 2,
   "result": {
     "status": "failed",
     "reason": "...",
+    "trust": "kane_verified_fail",
     "kaneVerified": false,
     "verificationSource": "kane_run_end",
     "testUrl": "...",
@@ -116,16 +139,13 @@ npx tsx src/cli.ts verify --checks demo/checks.json --fix-cmd "node demo/fix-gen
 }
 ```
 
-The fix command can be anything that reads stdin JSON and attempts a fix. BugBoing does not trust the fixer's exit code as proof; it reruns Kane.
+The fixer can be any command that reads stdin JSON and attempts a repair. After it exits — even with exit `0` — BugBoing reruns Kane.
 
 Examples:
 
 ```bash
-# Generic payload-driven fixer (included)
+# Generic payload-driven fixer (included, proves the contract)
 --fix-cmd "node demo/fix-generic.mjs"
-
-# Deterministic demo fixer (included)
---fix-cmd "node demo/fix.mjs"
 
 # Agent CLI examples (templates - adapt to your agent)
 --fix-cmd "opencode run 'Fix the bug using the BugBoing JSON on stdin'"
@@ -145,8 +165,9 @@ Exit codes:
 
 ## Evidence
 
-- `demo/report.json` - golden-path report (fail -> fix -> pass) with strict `kaneVerified`/`verificationSource` fields, refreshed from a real Kane run.
-- `tests/contract.test.ts` - enforces strict contract: only Kane `run_end` pass is green; exit 0 without `run_end` is unverified.
+- `demo/report.json` - golden-path report from a real Kane run (fail → fix → pass). The v0.2.0 report schema includes `contract`, `trust`, `kaneVerified`, `verificationSource`, and `rawRunEnd`; regenerate with `npm run demo` to capture a fresh report in the new schema.
+- `tests/contract.test.ts` - contract tests proving: pass is green only on Kane `run_end` pass; exit `0` without `run_end` is NOT green; missing `run_end` is unverified.
+- `demo/fix-generic.mjs` - payload-driven fixer proving the interface is agent-agnostic.
 
 ## Tests
 
@@ -154,22 +175,21 @@ Exit codes:
 npm test
 ```
 
-## Known Limitations
+## Known Limitations / Honest Positioning
 
-- The fail→fix→rerun verification loop is a crowded pattern. BugBoing's differentiator is the strict contract (no Kane `run_end` pass = no green) and an agent-agnostic `--fix-cmd` payload interface, not novelty of the loop itself.
-- Included fixers are demo-scoped (deterministic/payload-driven) for reliability; real agent CLIs can be plugged in via `--fix-cmd`, but are not bundled.
-- Kane objective phrasing matters; vague objectives may pass without strong assertion.
-- Depends on Kane CLI/TestMu AI availability and credits.
-- Windows PowerShell script policy may require `.cmd` wrappers.
-- No parallel checks, MCP server, or HTML dashboard (cut for scope).
+- **Crowded pattern.** Fail→fix→rerun loops and stdin-driven agent commands already exist in the ecosystem. BugBoing does **not** claim novelty there.
+- **Narrow proof.** BugBoing's value is the strict, testable verdict contract: no Kane `run_end` pass = no green. That contract is enforced in code and covered by contract tests.
+- **Demo fixers are scoped.** Included fixers are deterministic/payload-driven for reliability. Real agent CLIs can be plugged in, but are not bundled or benchmarked here.
+- **Kane objective quality matters.** Vague objectives may produce weak assertions.
+- **Operational dependency.** Requires Kane CLI/TestMu AI availability and credits. Windows PowerShell script policy may require `.cmd` wrappers.
+- **Cut for scope.** No parallel checks, MCP server, HTML dashboard, or 0-credit replay regression guard (investigated as a possible gap; not shipped).
 
 ## Next Steps
 
 - Add real agent adapters (`--fix-cmd` templates for OpenCode/Claude/Codex).
-- Add MCP server mode for agent-native integration.
-- Support `kane-cli generate/testmd/testrun` flows for richer assurance.
 - Add CI GitHub Action and PR comment report.
-- Add flaky-check quarantine and budget policies.
+- Investigate 0-credit Kane evidence verdict/policy as a regression guard (only if verified).
+- Add MCP server mode for agent-native integration.
 
 ## License
 
