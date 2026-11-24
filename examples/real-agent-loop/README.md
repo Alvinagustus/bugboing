@@ -51,7 +51,10 @@ node examples/real-agent-loop/run.mjs
 `run.mjs` starts the fixture on `http://127.0.0.1:4180`, runs
 `node dist/cli.js verify ... --fix-cmd "node examples/real-agent-loop/fix-with-opencode.mjs"`
 with `--max-attempts 2`, then writes `report.json`, `agent-transcript.ndjson`, and
-`diff.patch`.
+`diff.patch`. The checks file allows only `examples/real-agent-loop/site/**`;
+`run.mjs` also allowlists its own `run-output.txt` log. The wrapper writes the
+agent transcript to a temp file (not the workspace) and `run.mjs` copies it back,
+so the scope guard does not revert the evidence it is collecting.
 
 The wrapper only passes context: it reads BugBoing's JSON from stdin and gives the
 agent the check, the objective, and Kane's verdict. The agent decides what to edit.

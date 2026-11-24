@@ -1,11 +1,15 @@
 import { appendFileSync } from "node:fs";
+import os from "node:os";
 import path from "node:path";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(here, "../..");
-const transcript = path.join(here, "agent-transcript.ndjson");
+// Written outside the workspace so the scope guard does not treat the agent's
+// own transcript as an out-of-scope edit. run.mjs copies it back afterwards.
+const transcript =
+  process.env.AGENT_TRANSCRIPT || path.join(os.tmpdir(), "bugboing-agent-transcript.ndjson");
 
 let input = "";
 process.stdin.setEncoding("utf8");
