@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>BugBoing Checkout</title>
+    <style>
+      body { font: 16px/1.5 system-ui, sans-serif; margin: 0; background: #f6f4ef; color: #171717; }
+      main { max-width: 34rem; margin: 4rem auto; padding: 2rem; background: #fff; border: 1px solid #ddd7cb; border-radius: 12px; }
+      h1 { margin-top: 0; font-size: 1.5rem; }
+      .row { display: flex; justify-content: space-between; gap: 1rem; padding: .35rem 0; }
+      .muted { color: #6b6459; }
+      #discount { color: #146c43; }
+      .total { border-top: 1px solid #ddd7cb; margin-top: .75rem; padding-top: .75rem; font-weight: 700; }
+      input { font: inherit; padding: .4rem .5rem; width: 10rem; }
+      button { font: inherit; padding: .4rem .8rem; margin-left: .35rem; cursor: pointer; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Checkout</h1>
+      <p class="muted">One plan. One promo code. One total.</p>
+
+      <div class="row">
+        <span>Pro plan</span>
+        <span id="subtotal">$100.00</span>
+      </div>
+
+      <div class="row">
+        <label for="promo">Promo code</label>
+        <span>
+          <input id="promo" name="promo" autocomplete="off" placeholder="SAVE10" />
+          <button id="apply" type="button">Apply</button>
+        </span>
+      </div>
+
+      <div class="row" id="discount-row" hidden>
+        <span>Discount (SAVE10)</span>
+        <span id="discount">−$10.00</span>
+      </div>
+
+      <div class="row total">
+        <span>Order total</span>
+        <strong id="total">$100.00</strong>
+      </div>
+
+      <p id="status" class="muted" role="status"></p>
+    </main>
+    <script src="./app.js"></script>
+  </body>
+</html>

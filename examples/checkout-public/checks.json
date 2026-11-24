@@ -1,0 +1,10 @@
+[
+  {
+    "name": "checkout-total-public",
+    "url": "https://alvinagustus.github.io/bugboing/checkout-public/",
+    "objective": "On the checkout page, type SAVE10 into the promo code field and click Apply. After the discount appears, the order total must be exactly $90.00. Fail if the order total shows $100.00 or any amount other than $90.00.",
+    "timeoutSeconds": 120,
+    "maxSteps": 50,
+    "fixPaths": ["docs/checkout-public/**"]
+  }
+]
