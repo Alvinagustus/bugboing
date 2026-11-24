@@ -92,6 +92,8 @@ This resets the demo fixture, starts a local server, runs BugBoing with a generi
 
 Expected: attempt 1 fails because Kane catches `BugBoing Demoo` != `BugBoing Demo`, the fixer consumes the failure JSON from stdin and patches `demo/index.html`, attempt 2 passes only after Kane `run_end` reports `passed`.
 
+A **real agent** version of the same loop is committed in [`examples/real-agent-loop/`](./examples/real-agent-loop/): OpenCode CLI receives Kane's failure payload, reads and edits `app.js` with tools, and a fresh Kane run decides the outcome.
+
 Manual run:
 
 ```bash
@@ -171,6 +173,7 @@ Exit codes:
 ## Evidence
 
 - `demo/report.json` - real Kane golden-path report (fail → fix → pass), v0.2.0 schema with `contract`, `trust`, `kaneVerified`, `verificationSource`, and `rawRunEnd`.
+- `examples/real-agent-loop/` - real OpenCode CLI loop: Kane `740` → agent uses `glob`/`read`/`edit` → Kane `100`; includes the report, JSONL tool transcript, diff, and full run output.
 - `tests/contract.test.ts` - contract tests proving: pass is green only on Kane `run_end` pass; exit `0` without `run_end` is NOT green; missing/unparseable/non-`run_end` verdict is NOT green.
 - `tests/loop.test.ts` - loop test proving fixer is invoked, Kane reruns, and green happens only after a Kane `run_end` pass.
 - `tests/timeout.test.ts` + `tests/proc.test.ts` - a check whose Kane command hangs (and ignores `SIGTERM`) is killed with its whole process tree; BugBoing exits `1` with `unverified_missing_run_end` instead of hanging on open pipes.
@@ -186,7 +189,7 @@ npm test
 
 - **Crowded pattern.** Fail→fix→rerun loops and stdin-driven agent commands already exist in the ecosystem. BugBoing does **not** claim novelty there.
 - **Narrow proof.** BugBoing's value is the strict, testable verdict contract: no Kane `run_end` pass = no green. That contract is enforced in code and covered by contract tests.
-- **Demo fixers are scoped.** Included fixers are deterministic/payload-driven for reliability. Real agent CLIs can be plugged in, but are not bundled or benchmarked here.
+- **Demo fixers are scoped.** The golden-path demo uses a deterministic payload-driven fixer for reliability. One real agent loop is committed in `examples/real-agent-loop/` (OpenCode CLI + Kane fail→fix→pass), but it is a single fixture, not a benchmark.
 - **Kane objective quality matters.** Vague objectives may produce weak assertions.
 - **Operational dependency.** Requires Kane CLI/TestMu AI availability and credits. Windows PowerShell script policy may require `.cmd` wrappers.
 - **Cut for scope.** No parallel checks, MCP server, HTML dashboard, or 0-credit replay regression guard (investigated as a possible gap; not shipped).
